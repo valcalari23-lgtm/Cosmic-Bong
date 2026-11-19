@@ -1,0 +1,752 @@
+/* Cosmic Boing
+   Colors and fonts come from the Figma file (see docs/01-diseno-del-juego.md, section 6).
+   All sizes are in px on a fixed 1920 x 1080 stage that src/stage.js scales to the window. */
+
+@font-face {
+  font-family: "Poppins";
+  src: url("../assets/fonts/poppins-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../assets/fonts/poppins-600.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+
+/* Poppins is the only typeface, by Valeria's decision. The Figma design also used
+   Space Crusaders (titles) and Hey Comic (HUD); they are not used in this version. */
+
+:root {
+  --gold: #cfa818;
+  --blue: #18a3cf;
+  --plate: #0f0912;
+  --space: #020103;
+  --panel: #24162c;
+  --metal: #cdcdcd;
+  --good: #14ff00;
+  --bad: #fe0000;
+  --white: #ffffff;
+  --gameover-gold: #cba004;
+  --gameover-ink: #2c1b35;
+
+  --font-display: "Poppins", system-ui, sans-serif;   /* titles: weight 600, uppercase */
+  --font-hud: "Poppins", system-ui, sans-serif;       /* score, level: weight 600 */
+  --font-body: "Poppins", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: #000;
+  color: var(--white);
+  font-family: var(--font-body);
+  overflow: hidden;
+}
+
+#viewport {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+#stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: 0 0;
+  overflow: hidden;
+  background: var(--space);
+}
+
+#game {
+  position: absolute;
+  inset: 0;
+  width: 1920px;
+  height: 1080px;
+  display: block;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+}
+.screen[hidden] { display: none; }
+
+.deco {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---------- Title screen (docs/reference/01-title.png) ---------- */
+
+.logo {
+  position: absolute;
+  left: 555px;
+  top: 172px;
+  margin: 0;
+}
+.logo img {
+  display: block;
+  width: 810px;
+  height: auto;
+}
+
+.deco-meteorite { left: 163px; top: 340px; width: 255px; }
+.deco-tank { left: 368px; top: 748px; width: 133px; transform: rotate(31deg); }
+.deco-hero { right: 14px; bottom: 0; width: 538px; }
+
+.press {
+  display: inline-flex;
+  align-items: center;
+  gap: 22px;
+  padding: 10px 24px;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: 52px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.press img { width: 100px; height: 100px; }
+.press:hover { background: rgba(255, 255, 255, 0.08); }
+
+#screen-title .press {
+  position: absolute;
+  left: 50%;
+  top: 648px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* ---------- Game screen (docs/reference/00-gameplay-mockup.png) ----------
+   The action is drawn on the canvas underneath. This layer only takes focus
+   (and the HUD from stage 2). The system cursor hides while playing: the red
+   crosshair drawn on the canvas replaces it. */
+
+.screen-game {
+  outline: none;             /* focus is shown by the crosshair itself, not a box around the whole stage */
+}
+#stage.playing { cursor: none; }
+#stage.playing .lang { cursor: pointer; }
+
+/* HUD (docs/reference/00-gameplay-mockup.png). Positions scaled from the square
+   mock-up to the 1920 x 1080 stage: bar top left, score top centre, level top right. */
+
+.hud {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 140px;
+  pointer-events: none;
+  font-family: var(--font-hud);
+  font-weight: 600;
+  font-size: 46px;
+  line-height: 1;
+  color: var(--white);
+}
+.hud p { position: absolute; margin: 0; top: 48px; white-space: nowrap; }
+.hud-score { left: 50%; transform: translateX(-50%); }
+.hud-level { right: 60px; }
+
+.hud-bar {
+  position: absolute;
+  left: 60px;
+  top: 52px;
+  width: 420px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+.hud-bar-fill {
+  width: 0;
+  height: 100%;
+  background: var(--white);
+  border-radius: 8px;
+  transition: width 250ms ease-out;
+}
+
+/* Level timer under the bar (placement provisional, question 5). */
+.hud p.hud-time {
+  left: 60px;
+  top: 100px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 38px;
+}
+.hud-time img { width: 44px; height: 44px; }
+.hud-time-low { color: var(--bad); }
+
+.popup-icon {
+  width: 72px;
+  height: 72px;
+  vertical-align: middle;
+  margin-right: 14px;
+}
+
+/* Floating score labels (+50 green, -50 red). */
+.popups { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.popup {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-hud);
+  font-weight: 600;
+  font-size: 84px;
+  line-height: 1;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
+  animation: popup-rise 700ms ease-out forwards;
+}
+.popup-good { color: var(--good); }
+.popup-bad { color: var(--bad); }
+.popup-still { animation-name: popup-fade; }
+
+@keyframes popup-rise {
+  0%   { opacity: 0; transform: translate(-50%, -30%) scale(0.7); }
+  20%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -150%) scale(1); }
+}
+@keyframes popup-fade {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ---------- Panel (instructions, controls) ---------- */
+
+.panel {
+  position: absolute;
+  left: 222px;
+  top: 102px;
+  width: 1518px;
+  height: 870px;
+  padding: 70px 120px 60px 240px;
+  background: url("../assets/ui/panel.png") center / 100% 100% no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  text-align: center;
+}
+
+.screen-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 61px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.body-text {
+  margin: 0;
+  max-width: 900px;
+  font-size: 41px;
+  line-height: 1.35;
+}
+
+/* ---------- Language switch ---------- */
+
+/* Bottom left: the only corner free on every screen (the HUD uses the top row,
+   the title hero the bottom right). */
+.lang {
+  position: absolute;
+  left: 28px;
+  bottom: 24px;
+  padding: 10px 18px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  background: rgba(15, 9, 18, 0.75);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 24px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.lang:hover { background: rgba(15, 9, 18, 0.95); }
+
+/* ---------- Focus, always visible ----------
+   Two rings: a dark halo right around the element and the blue outline outside it,
+   so the indicator reads on dark space (blue, 7:1) and on the gold Game Over (dark, 6.5:1). */
+
+:focus-visible {
+  outline: 5px solid var(--blue);
+  outline-offset: 6px;
+  box-shadow: 0 0 0 6px var(--plate);
+}
+
+/* ---------- Utilities ---------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+#debug {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  text-align: left;
+  margin: 0;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.7);
+  color: var(--good);
+  font: 20px/1.3 ui-monospace, Consolas, monospace;
+  pointer-events: none;
+}
+#debug[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+  /* Keep the popup readable without motion: it stays and is removed by src/hud.js. */
+  .popup { opacity: 1; }
+}
+
+/* ---------- Level banner and pause (game screen) ---------- */
+
+.level-banner {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 24px 64px;
+  border-radius: 24px;
+  background: rgba(15, 9, 18, 0.8);
+  font-family: var(--font-display);
+  font-size: 96px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.level-banner[hidden] { display: none; }
+
+.pause {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 1, 3, 0.7);
+}
+.pause[hidden] { display: none; }
+.pause-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+  padding: 70px 120px;
+  border-radius: 32px;
+  background: rgba(36, 22, 44, 0.95);
+  border: 4px solid var(--metal);
+  text-align: center;
+}
+
+/* ---------- Game Over (docs/reference/04-game-over.png) ----------
+   Gold background with the broken-glass layer blended on top, two dark side
+   bars, the title in dark purple, an empty tank meter, the restart question and
+   the restart button. Text is dark purple instead of the design's white because
+   white on this gold is below the 4.5:1 contrast the project requires. */
+
+.screen-gameover {
+  background: var(--gameover-gold);
+  text-align: center;
+}
+.screen-gameover .glass {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: overlay;
+  opacity: 0.95;
+  pointer-events: none;
+}
+.side-bar {
+  position: absolute;
+  top: 0;
+  width: 90px;
+  height: 100%;
+  background: #2a2a2e;
+  box-shadow: inset 0 0 0 12px #3a3a3e;
+}
+.side-bar-left { left: 200px; }
+.side-bar-right { left: 1630px; }
+
+.gameover-title {
+  position: absolute;
+  left: 50%;
+  top: 72px;
+  width: 700px;
+  margin: 0;
+  transform: translateX(-50%);
+  color: var(--gameover-ink);
+  font-family: var(--font-display);
+  font-size: 170px;
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.meter {
+  position: absolute;
+  left: 390px;
+  top: 415px;
+  width: 1140px;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  border-radius: 6px;
+  background: #606068;
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: 96px;
+  font-weight: 600;
+  line-height: 1;
+}
+.meter-cells {
+  display: flex;
+  gap: 6px;
+  height: 150px;
+}
+.meter-cells i {
+  display: block;
+  width: 220px;
+  height: 100%;
+  background: #f4f4f4;
+  clip-path: polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%, 15% 50%);
+}
+
+.gameover-question {
+  position: absolute;
+  left: 50%;
+  top: 720px;
+  margin: 0;
+  transform: translateX(-50%);
+  color: var(--gameover-ink);
+  font-family: var(--font-display);
+  font-size: 84px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+#screen-gameover .press {
+  position: absolute;
+  left: 50%;
+  top: 850px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.press-ink { color: var(--gameover-ink); }
+.press-ink:hover { background: rgba(44, 27, 53, 0.12); }
+.press-ink img { filter: brightness(0.25) sepia(1) hue-rotate(230deg) saturate(2); }  /* white tap icon tinted dark purple */
+
+/* ---------- Boss lives (HUD, level 4) ---------- */
+
+.hud-boss {
+  position: absolute;
+  right: 60px;
+  top: 104px;
+  display: flex;
+  gap: 8px;
+}
+.hud-boss[hidden] { display: none; }
+.pip {
+  display: block;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+.pip-on { background: var(--bad); border-color: #fff; }
+
+/* ---------- Win 1: heading to Earth (docs/reference/05-win-heading-to-earth.png) ---------- */
+
+.screen-win1 {
+  background: #161616;
+  outline: none;
+}
+/* Slot for an image that may not exist yet: shows the file name until the image loads over it. */
+.asset-slot {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px dashed rgba(255, 255, 255, 0.45);
+  border-radius: 24px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 28px;
+  text-align: center;
+  overflow: hidden;
+}
+.asset-slot img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.slot-earth { left: 60px; top: -700px; width: 1800px; height: 1660px; border-radius: 50%; background: #2a2470; }
+.slot-earth span { position: absolute; left: 50%; top: 1020px; transform: translateX(-50%); }
+.slot-flare { left: -80px; top: -60px; width: 420px; height: 420px; border-radius: 50%; background: rgba(255,255,255,0.08); }
+.slot-rocket { left: 560px; top: 280px; width: 800px; height: 800px; }
+
+.win1-heading {
+  position: absolute;
+  left: 50%;
+  top: 92px;
+  margin: 0;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+  white-space: nowrap;
+}
+.win1-line1 { font-size: 64px; line-height: 1.1; }
+.win1-line2 { font-size: 112px; line-height: 1.05; }
+
+/* ---------- Win 2: home (docs/reference/06-win-home.png) ---------- */
+
+.screen-win2 {
+  background: #7fc9dd;
+  text-align: center;
+}
+.win2-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.win2-stack {
+  position: absolute;
+  left: 50%;
+  top: 70px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.win2-heading {
+  max-width: 1240px;
+  margin: 0;
+  padding: 44px 72px;
+  border-radius: 48px;
+  background: var(--plate);
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 120px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.win2-question {
+  margin: 0;
+  color: var(--gameover-ink);
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+#screen-win2 .press { white-space: nowrap; }
+.win2-hero {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 270px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* ---------- Instructions and Controls (docs/reference/02-instructions.png, 03-...) ---------- */
+
+.panel-instructions,
+.panel-controls {
+  gap: 20px;
+  padding-top: 56px;
+  padding-bottom: 40px;
+}
+.deco-panel-meteorite-top { left: 345px; top: 40px; width: 110px; }
+.deco-panel-meteorite-right { left: 1680px; top: 290px; width: 90px; transform: scaleX(-1) rotate(-10deg); }
+
+.press-small { font-size: 40px; padding: 6px 18px; }
+.press-small img { width: 76px; height: 76px; }
+
+.rules {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rule-visual {
+  display: flex;
+  align-items: center;
+  gap: 54px;
+  height: 140px;
+}
+.target {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.target .sprite { height: 132px; width: auto; }
+.target .sight {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-60%, -30%);
+}
+.target .sight-star { transform: translate(-70%, -10%); }
+.boom { height: 132px; width: auto; }
+/* White arrow drawn with CSS (the original uses a plain white arrow). */
+.arrow {
+  position: relative;
+  width: 90px;
+  height: 6px;
+  background: var(--white);
+  border-radius: 3px;
+}
+.arrow::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  top: 50%;
+  width: 26px;
+  height: 26px;
+  border-top: 6px solid var(--white);
+  border-right: 6px solid var(--white);
+  transform: translateY(-50%) rotate(45deg);
+}
+.result {
+  min-width: 190px;
+  font-family: var(--font-hud);
+  font-size: 76px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: left;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.result.good { color: var(--good); }
+.result.bad { color: var(--bad); }
+.result .clock { width: 86px; height: 86px; }
+
+.panel-instructions .body-text { font-size: 40px; }
+
+.controls-columns {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+.control {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 0 30px;
+}
+.control + .control { border-left: 3px solid rgba(255, 255, 255, 0.6); }
+.slot-control {
+  position: relative;
+  width: 420px;
+  height: 190px;
+  font-size: 24px;
+}
+.control-title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 54px;
+  font-weight: 600;
+  line-height: 1;
+}
+.control-how {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  max-width: 520px;
+  font-size: 34px;
+  line-height: 1.3;
+}
+.or { opacity: 0.8; }
+.keys { display: inline-flex; gap: 8px; }
+kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  height: 56px;
+  padding: 0 14px;
+  border: 3px solid var(--metal);
+  border-bottom-width: 6px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1;
+}
+.control-extra {
+  margin: 0;
+  font-size: 30px;
+  opacity: 0.9;
+}
+
+/* Light plate behind the question and button of the home screen (contrast over the hills). */
+.win2-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 48px 22px;
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.82);
+}
+.win2-actions .press-ink:hover { background: rgba(44, 27, 53, 0.1); }

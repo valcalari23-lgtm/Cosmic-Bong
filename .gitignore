@@ -1,0 +1,17 @@
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+
+# Ajustes locales de Claude Code
+.claude/settings.local.json
+
+# Por si algún día se agregan herramientas
+node_modules/
+
+# Configuración local de la app Claude Code (servidor de vista previa)
+.claude/
