@@ -21,6 +21,9 @@ CB.assets = (function () {
     iconTime: 'assets/ui/icon-time.png',
     /* Space background from Valeria (2026-11-18). If she adds the original PNG as space.png it is used first. */
     bgSpace: ['assets/backgrounds/space.png', 'assets/backgrounds/space.webp'],
+    /* Full "heading to Earth" screen from Valeria (2026-11-19). PNG first if she adds it. The file has
+       the Spanish title baked in, so the HTML heading sits on a plate over it (see css). */
+    bgWinHeading: ['assets/backgrounds/win-heading.png', 'assets/backgrounds/win-heading.webp'],
     bgHome: 'assets/backgrounds/home.png',
     glassOverlay: 'assets/backgrounds/game-over-glass-overlay.png'
   };

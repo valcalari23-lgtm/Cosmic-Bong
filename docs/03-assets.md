@@ -70,9 +70,7 @@ Lo que falta y quién lo resuelve.
 | Qué | Para qué etapa | Dónde está en Figma | Nota |
 |---|---|---|---|
 | Héroe de espaldas en alta resolución | 1 | 38:1773 | Exportar como `hero-back.svg` (como los otros cinco SVG) o a 4x como `hero-back.png` |
-| Cohete | 5 | 38:2652 (Group 264) | Victoria 1. Guardar como `assets/sprites/rocket.png` (o `.svg`): la pantalla lo muestra en cuanto exista. |
-| Tierra | 5 | 38:2632 (Group 253) | Victoria 1. Guardar como `assets/backgrounds/win-earth.png`. |
-| Destello de sol | 5 | 38:2651 (Star 1) | Victoria 1. Guardar como `assets/ui/sun-flare.png`. |
+| Pantalla "Rumbo a la Tierra" en alta resolución | 5 | 38:2631 | Valeria entregó la pantalla completa el 19 de noviembre de 2026 (`assets/backgrounds/win-heading.webp`, comprimida por el chat). El título va incrustado en español en ambos idiomas, por decisión de Valeria. Si copia el PNG original como `win-heading.png`, el juego lo prefiere. Los recuadros de cohete, Tierra y destello solo aparecen si falta esta imagen. |
 | Medidor vacío de Game Over | 4 | 38:2593 (Group 47) | Hecho con CSS en la etapa 4 (`.meter`). Si Valeria prefiere el dibujo original, exportarlo como `assets/ui/meter-empty.png`. |
 | Barras verticales de Game Over | 4 | 38:2614 a 38:2620 | Hechas con CSS en la etapa 4 (`.side-bar`). |
 | Tanque decorativo girado | 0, opcional | 38:2188 | Decoración de la pantalla de inicio |

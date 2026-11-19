@@ -101,6 +101,7 @@ Todo esto es **[Adaptación]**: decisiones nuevas, propuestas para que Valeria l
 | Pausa | | P o Esc |
 | Idioma | Botón ES/EN | L |
 | Avanzar en pantallas | Clic en el botón | Enter o Espacio con el botón enfocado |
+| En el celular (etapa 8) | Inclinar el celular para apuntar, como en el original; tocar la pantalla para disparar | |
 
 - El cursor del sistema se oculta sobre el área de juego y se reemplaza por la mira (`ui/crosshair.png`).
 - La pantalla de Controles necesita ilustraciones nuevas (mouse y teclas) en el estilo de línea blanca del original. Mientras Valeria las diseña, se muestran con texto.

@@ -750,3 +750,32 @@ kbd {
   background: rgba(255, 255, 255, 0.82);
 }
 .win2-actions .press-ink:hover { background: rgba(44, 27, 53, 0.1); }
+
+/* Win 1 with Valeria's full artwork: the image covers the stage and the dashed slots hide.
+   The artwork carries the Spanish title itself (Valeria's choice, 2026-11-19, for both
+   languages), so the HTML heading is kept only for screen readers. */
+.win1-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.win1-bg[hidden] { display: none; }
+.screen-win1.has-art .asset-slot { display: none; }
+.screen-win1.has-art .win1-heading {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Phones (stage 8): no scrolling or pinch-zoom over the game; hint only on touch devices ---------- */
+
+#viewport { touch-action: none; -webkit-user-select: none; user-select: none; }
+.phone-only { display: none; }
+html.is-touch .phone-only { display: block; }

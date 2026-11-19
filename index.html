@@ -107,6 +107,8 @@
             </section>
           </div>
           <p class="control-extra"><span data-i18n="controls.pauseHow"></span> &middot; <span data-i18n="controls.langHow"></span></p>
+          <!-- Shown only on touch devices (html.is-touch, set by src/main.js). -->
+          <p class="control-extra phone-only" data-i18n="controls.phoneHint"></p>
           <button id="btn-controls-start" class="press press-small" type="button">
             <span data-i18n="common.press"></span>
             <img src="assets/ui/icon-tap.png" alt="" width="114" height="114">
@@ -174,6 +176,8 @@
            The rocket, Earth and sun flare are not exported yet (docs/03-assets.md, Pendientes):
            each box shows the expected file name until the file exists, then the image covers it. -->
       <section id="screen-win1" class="screen screen-win1" data-screen="win1" tabindex="-1" aria-labelledby="win1-heading" hidden>
+        <!-- Full-screen artwork (src set by src/main.js once loaded). The dashed slots below only show if it is missing. -->
+        <img class="win1-bg" alt="" hidden>
         <div class="asset-slot slot-earth"><span>assets/backgrounds/win-earth.png</span><img src="assets/backgrounds/win-earth.png" alt=""></div>
         <div class="asset-slot slot-flare"><span>assets/ui/sun-flare.png</span><img src="assets/ui/sun-flare.png" alt=""></div>
         <div class="asset-slot slot-rocket"><span>assets/sprites/rocket.png</span><img src="assets/sprites/rocket.png" alt=""></div>

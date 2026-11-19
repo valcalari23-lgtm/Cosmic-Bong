@@ -133,6 +133,13 @@ CB.config = {
     }
   },
 
+  /* ADAPTATION, faithful to the original phone control (stage 8): on a phone, tilting
+     aims and a tap shoots. Tilt switches on by itself when orientation data arrives. */
+  tilt: {
+    rangeDeg: 18,              // tilting this far from the starting hold puts the crosshair at the stage edge
+    smoothing: 0.25            // 0..1: higher follows the hand faster, lower is steadier
+  },
+
   /* Only active with index.html?debug=1 */
   debug: {
     enabled: /[?&]debug=1/.test(window.location.search),

@@ -38,7 +38,8 @@ CB.strings = {
       keysAim: 'o las flechas, o las teclas W, A, S y D',             // [NEW] screen-reader text
       keysShoot: 'o la barra espaciadora, o Enter',                   // [NEW] screen-reader text
       pauseHow: 'P o Esc para pausar',                 // [NEW] desktop controls
-      langHow: 'L cambia el idioma'                    // [NEW]
+      langHow: 'L cambia el idioma',                   // [NEW]
+      phoneHint: 'En el celular: inclínalo para apuntar y toca la pantalla para disparar.'   // [NEW] like the original
     },
     hud: {
       level: 'Nivel',                                  // [F]
@@ -112,7 +113,8 @@ CB.strings = {
       keysAim: 'or the arrow keys, or W, A, S and D',                 // [NEW] screen-reader text
       keysShoot: 'or the space bar, or Enter',                        // [NEW] screen-reader text
       pauseHow: 'P or Esc to pause',                   // [NEW] desktop controls
-      langHow: 'L changes the language'                // [NEW]
+      langHow: 'L changes the language',               // [NEW]
+      phoneHint: 'On a phone: tilt it to aim and tap the screen to shoot.'                   // [NEW] like the original
     },
     hud: {
       level: 'Level',                                  // [FL]
