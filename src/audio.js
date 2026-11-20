@@ -58,66 +58,78 @@ CB.audio = (function () {
   }
 
   /* ---------- the music, written as patterns ----------
+     Style (Valeria, 2026-11-20): classic arcade space shooter. Pulse-wave leads, a driving bass
+     in octaves, a straight kick-snare beat; minor keys for the action, a bright fanfare to win.
      Each voice loops on its own length, so a 4-bar bass line fits under an 8-bar melody.
-     len = note length in eighths. Drums: k = kick, s = snare, h = hi-hat (letters can combine). */
+     division = steps per beat (2 = eighths, 4 = sixteenths). len = note length in steps.
+     Drums: k = kick, s = snare, h = hi-hat (letters can combine). */
 
   var TRACKS = {
-    /* Menus: calm, major, slow. C - Am - F - G. */
+    /* Menus: arcade "attract mode". A minor, octave bass, square lead. Am - F - C - G. */
     title: {
-      bpm: 96,
+      bpm: 150,
+      division: 2,
       loop: true,
       voices: [
-        { wave: 'triangle', vol: 0.45, len: 1.6, pattern:
-          'E5 . G5 . A5 . G5 . | E5 . . . D5 . C5 . | D5 . E5 . G5 . E5 . | D5 . . . . . . . | ' +
-          'E5 . G5 . A5 . C6 . | B5 . . . A5 . G5 . | A5 . G5 . E5 . D5 . | C5 . . . . . . .' },
-        { wave: 'square', vol: 0.09, len: 1.8, pattern:
-          'C3 . . . G3 . . . | A2 . . . E3 . . . | F2 . . . C3 . . . | G2 . . . D3 . . .' },
-        { wave: 'sine', vol: 0.18, len: 0.9, pattern:
-          '. C4 E4 G4 . E4 G4 C5 | . A3 C4 E4 . C4 E4 A4 | . F3 A3 C4 . A3 C4 F4 | . G3 B3 D4 . B3 D4 G4' }
-      ]
-    },
-    /* Levels 1-3: upbeat. Am - F - C - G. */
-    play: {
-      bpm: 140,
-      loop: true,
-      voices: [
-        { wave: 'square', vol: 0.14, len: 0.9, pattern:
-          'A4 . C5 . E5 . C5 . | F4 . A4 . C5 . A4 . | C5 . E5 . G5 . E5 . | G4 . B4 . D5 . B4 . | ' +
-          'A4 . A4 C5 E5 . E5 . | F5 . E5 . C5 . A4 . | G4 . A4 . C5 . D5 . | E5 . . . . . . .' },
+        { wave: 'square', vol: 0.13, len: 0.9, pattern:
+          'A4 . A4 . C5 . E5 . | D5 . C5 . B4 . . . | A4 . A4 . C5 . E5 . | G5 . E5 . D5 . . . | ' +
+          'A4 . A4 . C5 . E5 . | D5 . C5 . B4 . . . | C5 . B4 . A4 . G4 . | A4 . . . . . . .' },
         { wave: 'square', vol: 0.11, len: 0.8, pattern:
-          'A2 . A2 A2 A3 . A2 A2 | F2 . F2 F2 F3 . F2 F2 | C3 . C3 C3 C4 . C3 C3 | G2 . G2 G2 G3 . G2 G2' }
+          'A2 A3 A2 A3 A2 A3 A2 A3 | F2 F3 F2 F3 F2 F3 F2 F3 | C3 C4 C3 C4 C3 C4 C3 C4 | G2 G3 G2 G3 G2 G3 G2 G3' }
       ],
-      drums: 'k h s h k h s hh'
+      drums: 'k h s h k h s h'
     },
-    /* Boss: tense, minor, fast. Dm - Dm - Bb - A. */
-    boss: {
-      bpm: 160,
+    /* Levels 1-3: fast, driving sixteenth-note bass. E minor. Em - C - D - B. */
+    play: {
+      bpm: 170,
+      division: 4,
       loop: true,
       voices: [
-        { wave: 'square', vol: 0.14, len: 0.9, pattern:
-          'D5 . D5 F5 . E5 D5 . | C5 . D5 . A4 . . . | Bb4 . D5 . F5 . D5 . | A4 . C#5 . E5 . A5 . | ' +
-          'D5 . D5 F5 . E5 D5 . | C5 . D5 . A4 . . . | Bb4 . A4 . G4 . F4 . | E4 . C#5 . . . . .' },
+        { wave: 'square', vol: 0.12, len: 1.6, pattern:
+          'E5 . . . G5 . . . B5 . . . G5 . E5 . | C5 . . . E5 . . . G5 . . . E5 . . . | ' +
+          'D5 . . . F#5 . . . A5 . . . F#5 . D5 . | B4 . . . D#5 . . . F#5 . . . . . . . | ' +
+          'E5 . E5 . G5 . B5 . E6 . . . B5 . G5 . | C6 . . . B5 . . . G5 . . . E5 . . . | ' +
+          'D5 . F#5 . A5 . D6 . A5 . F#5 . D5 . . . | B4 . . . D#5 . . . F#5 . . . B5 . . .' },
         { wave: 'sawtooth', vol: 0.1, len: 0.7, pattern:
-          'D2 D2 D3 D2 D2 D2 D3 D2 | D2 D2 D3 D2 D2 D2 D3 D2 | Bb1 Bb1 Bb2 Bb1 Bb1 Bb1 Bb2 Bb1 | A1 A1 A2 A1 A1 A1 A2 A1' }
+          'E2 E2 E3 E2 E2 E3 E2 E2 E2 E2 E3 E2 E2 E3 E2 E2 | C2 C2 C3 C2 C2 C3 C2 C2 C2 C2 C3 C2 C2 C3 C2 C2 | ' +
+          'D2 D2 D3 D2 D2 D3 D2 D2 D2 D2 D3 D2 D2 D3 D2 D2 | B1 B1 B2 B1 B1 B2 B1 B1 B1 B1 B2 B1 B1 B2 B1 B1' }
       ],
-      drums: 'k h s h k k s h'
+      drums: 'k . h . s . h . k . h . s . h h'
     },
-    /* "Heading to Earth": a short bright fanfare, played once. */
+    /* Boss: faster, menacing, chromatic bass. D minor. */
+    boss: {
+      bpm: 180,
+      division: 4,
+      loop: true,
+      voices: [
+        { wave: 'square', vol: 0.13, len: 1.2, pattern:
+          'D5 . . . . . F5 . . . E5 . . . D5 . | Bb4 . . . A4 . . . G#4 . . . A4 . . . | ' +
+          'D5 . . . . . F5 . . . G5 . . . A5 . | Bb5 . . . A5 . . . G#5 . A5 . . . . .' },
+        { wave: 'sawtooth', vol: 0.12, len: 0.7, pattern:
+          'D2 D2 D3 D2 D2 D2 D3 D2 D2 D2 D3 D2 Eb2 Eb2 D2 D2 | Bb1 Bb1 Bb2 Bb1 Bb1 Bb1 Bb2 Bb1 A1 A1 A2 A1 A1 A1 A2 A1' }
+      ],
+      drums: 'k . h h s . h . k . k . s . h h'
+    },
+    /* "Heading to Earth": stage-clear fanfare, played once. */
     win: {
-      bpm: 120,
+      bpm: 140,
+      division: 2,
       loop: false,
       voices: [
-        { wave: 'triangle', vol: 0.4, len: 1.4, pattern: 'C5 E5 G5 C6 . G5 C6 . | E6 . . . . . . .' },
-        { wave: 'sine', vol: 0.16, len: 8, pattern: 'C4 . . . . . . . | C4 . . . . . . .' },
-        { wave: 'sine', vol: 0.12, len: 8, pattern: 'G4 . . . . . . . | E4 . . . . . . .' }
-      ]
+        { wave: 'square', vol: 0.14, len: 1.3, pattern: 'C5 . E5 . G5 . C6 . | E6 . . . D6 . C6 . | D6 . E6 . G6 . . . | G6 . . . . . . .' },
+        { wave: 'triangle', vol: 0.3, len: 1.3, pattern: 'C5 . E5 . G5 . C6 . | E6 . . . D6 . C6 . | D6 . E6 . G6 . . . | G6 . . . . . . .' },
+        { wave: 'square', vol: 0.07, len: 3.5, pattern: 'C4 . . . E4 . . . | G4 . . . C5 . . . | D4 . . . F4 . . . | G4 . . . . . . .' }
+      ],
+      drums: 'k . s . k . s .'
     },
-    /* Game Over: four steps down and a low note, played once. */
+    /* Game Over: the classic "wah wah wah" walk down, played once. */
     over: {
-      bpm: 72,
+      bpm: 90,
+      division: 2,
       loop: false,
       voices: [
-        { wave: 'square', vol: 0.14, len: 1.9, pattern: 'E4 . Eb4 . D4 . C#4 . | C4 . . . . . . .' },
+        { wave: 'square', vol: 0.14, len: 1.8, pattern: 'E4 . Eb4 . D4 . Db4 . | C4 . . . . . . .' },
+        { wave: 'sawtooth', vol: 0.08, len: 1.8, pattern: 'E3 . Eb3 . D3 . Db3 . | C3 . . . . . . .' },
         { wave: 'triangle', vol: 0.2, len: 8, pattern: 'A2 . . . . . . . | F2 . . . . . . .' }
       ]
     }
@@ -140,7 +152,7 @@ CB.audio = (function () {
     osc.stop(t + dur + 0.03);
   }
 
-  function noise(dest, t, dur, vol, filterType, filterHz) {
+  function noise(dest, t, dur, vol, filterType, filterHz, sweepToHz) {
     if (!noiseBuffer) {
       noiseBuffer = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
       var data = noiseBuffer.getChannelData(0);
@@ -150,7 +162,8 @@ CB.audio = (function () {
     src.buffer = noiseBuffer;
     var filter = ctx.createBiquadFilter();
     filter.type = filterType;
-    filter.frequency.value = filterHz;
+    filter.frequency.setValueAtTime(filterHz, t);
+    if (sweepToHz) { filter.frequency.exponentialRampToValueAtTime(sweepToHz, t + dur); }
     var g = ctx.createGain();
     g.gain.setValueAtTime(vol, t);
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
@@ -167,33 +180,44 @@ CB.audio = (function () {
 
   /* ---------- sound effects ---------- */
 
+  /* Arcade vocabulary: laser "pew", filtered-noise explosions, an alarm for the boss,
+     a rising arpeggio for the power-up, a buzzer for the trap. */
   var SFX = {
-    shoot: function (t) { tone(sfxGain, 'square', 900, t, 0.12, 0.22, 200); },
+    shoot: function (t) {
+      tone(sfxGain, 'square', 1600, t, 0.1, 0.24, 120);          // laser: fast sweep down
+      tone(sfxGain, 'sawtooth', 800, t, 0.07, 0.08, 100);
+    },
     hitMeteorite: function (t) {
-      noise(sfxGain, t, 0.3, 0.5, 'lowpass', 1400);
-      tone(sfxGain, 'sine', 140, t, 0.25, 0.5, 40);
+      noise(sfxGain, t, 0.45, 0.7, 'lowpass', 3000, 200);        // explosion: noise closing down
+      tone(sfxGain, 'sine', 120, t, 0.35, 0.6, 30);              // thump
     },
     hitTrap: function (t) {
-      tone(sfxGain, 'sawtooth', 320, t, 0.35, 0.2, 70);
-      tone(sfxGain, 'square', 240, t + 0.05, 0.3, 0.1, 60);
+      tone(sfxGain, 'sawtooth', 200, t, 0.35, 0.14);             // buzzer: two detuned saws
+      tone(sfxGain, 'sawtooth', 211, t, 0.35, 0.14);
+      tone(sfxGain, 'square', 150, t + 0.02, 0.3, 0.1, 90);
     },
     star: function (t) {
-      ['C6', 'E6', 'G6', 'C7'].forEach(function (n, i) { tone(sfxGain, 'triangle', freq(n), t + i * 0.07, 0.18, 0.3); });
+      ['C6', 'E6', 'G6', 'C7', 'E7', 'G7'].forEach(function (n, i) { tone(sfxGain, 'square', freq(n), t + i * 0.05, 0.14, 0.14); });
     },
     bossHit: function (t) {
-      noise(sfxGain, t, 0.35, 0.6, 'lowpass', 900);
-      tone(sfxGain, 'square', 220, t, 0.3, 0.28, 50);
+      noise(sfxGain, t, 0.5, 0.8, 'lowpass', 1800, 120);
+      tone(sfxGain, 'square', 160, t, 0.4, 0.3, 40);
     },
-    bossArrives: function (t) {
-      tone(sfxGain, 'sawtooth', freq('D2'), t, 0.9, 0.28);
-      tone(sfxGain, 'sawtooth', freq('A2'), t + 0.1, 0.8, 0.18);
+    bossArrives: function (t) {                                  // alarm siren, twice
+      tone(sfxGain, 'sawtooth', 300, t, 0.4, 0.2, 600);
+      tone(sfxGain, 'sawtooth', 600, t + 0.4, 0.4, 0.2, 300);
+      tone(sfxGain, 'sawtooth', 300, t + 0.8, 0.4, 0.2, 600);
+      tone(sfxGain, 'sawtooth', 600, t + 1.2, 0.4, 0.2, 300);
     },
-    levelUp: function (t) {
-      ['G5', 'C6', 'E6', 'G6'].forEach(function (n, i) { tone(sfxGain, 'square', freq(n), t + i * 0.09, 0.2, 0.16); });
+    levelUp: function (t) {                                      // stage clear arpeggio
+      ['C5', 'E5', 'G5', 'C6', 'E6', 'G6', 'C7'].forEach(function (n, i) { tone(sfxGain, 'square', freq(n), t + i * 0.06, 0.22, 0.16); });
+      tone(sfxGain, 'square', freq('C7'), t + 0.45, 0.5, 0.14);
+      tone(sfxGain, 'square', freq('E6'), t + 0.45, 0.5, 0.08);
     },
-    warning: function (t) {
-      tone(sfxGain, 'square', 880, t, 0.1, 0.18);
-      tone(sfxGain, 'square', 880, t + 0.2, 0.1, 0.18);
+    warning: function (t) {                                      // three alarm beeps
+      tone(sfxGain, 'square', 1200, t, 0.08, 0.2);
+      tone(sfxGain, 'square', 1200, t + 0.18, 0.08, 0.2);
+      tone(sfxGain, 'square', 1200, t + 0.36, 0.08, 0.2);
     },
     pause: function (t)  { tone(sfxGain, 'triangle', 660, t, 0.1, 0.2); tone(sfxGain, 'triangle', 440, t + 0.1, 0.15, 0.2); },
     resume: function (t) { tone(sfxGain, 'triangle', 440, t, 0.1, 0.2); tone(sfxGain, 'triangle', 660, t + 0.1, 0.15, 0.2); }
@@ -205,7 +229,7 @@ CB.audio = (function () {
     var track = TRACKS[name];
     var gain = ctx.createGain();
     gain.connect(musicGain);
-    var stepSec = 60 / track.bpm / 2;
+    var stepSec = 60 / track.bpm / (track.division || 2);
     var voices = track.voices.map(function (v) { return { v: v, notes: steps(v.pattern) }; });
     var drums = track.drums ? steps(track.drums) : null;
     var length = 0;

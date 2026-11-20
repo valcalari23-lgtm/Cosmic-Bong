@@ -16,11 +16,6 @@ CB.game = (function () {
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   var KINDS = ['meteorite', 'trap', 'star'];
-  var INTERVAL_MS = {                       // VERIFIED (original code)
-    meteorite: cfg.spawn.meteoriteEveryMs,
-    trap: cfg.spawn.trapEveryMs,
-    star: cfg.spawn.starEveryMs
-  };
 
   var state = 'idle';
   var objects = [];
@@ -38,6 +33,13 @@ CB.game = (function () {
 
   function isBossLevel() {
     return level === cfg.boss.level;
+  }
+
+  /* Seconds between two objects of a kind on the current level (TUNED: spawn.levelScale). */
+  function spawnEvery(kind) {
+    var scale = cfg.spawn.levelScale || [1];
+    var factor = scale[Math.min(level, scale.length) - 1];
+    return cfg.spawn[kind + 'EveryMs'] * factor / 1000;
   }
 
   function twoDigits(n) {
@@ -219,7 +221,7 @@ CB.game = (function () {
       var kind = KINDS[i];
       spawnTimers[kind] -= dt;
       if (spawnTimers[kind] > 0) { continue; }
-      spawnTimers[kind] = INTERVAL_MS[kind] / 1000;
+      spawnTimers[kind] = spawnEvery(kind);
       objects.push(CB.entities.spawn(kind, speed));
     }
   }

@@ -5,6 +5,8 @@
    PROVISIONAL = placeholder so the game can run. Not from the original game.
                  Confirm with Valeria before treating it as final, then move it under VERIFIED.
    ADAPTATION  = new for the desktop version.
+   TUNED       = Valeria changed it on purpose for this version (date beside it); the original
+                 value stays in the comment so the change is traceable.
 
    See docs/01-diseno-del-juego.md. */
 
@@ -31,7 +33,7 @@ CB.config = {
     lives: 10,              // Figma: "it must be shot 10 times to win the game"
     /* ---- PROVISIONAL (question 9): how the boss behaves. Nothing below is from the original. ---- */
     patrol: { y: 330, minX: 420, maxX: 1500 },   // moves left-right along this line, bouncing at the ends
-    speedFactor: 1.0,       // times the level-4 object speed
+    speedFactor: 0.8,       // times the level-4 object speed (TUNED 2026-11-20 with the faster levels; was 1.0)
     hitRadiusPx: 110,       // bigger target than hit.radiusPx: the boss is a large sprite
     flashMs: 150,           // brief dim after a hit (one flash per hit, never repeated)
     othersKeepSpawning: true,
@@ -43,10 +45,14 @@ CB.config = {
   timer: {
     levelMs: 60000          // code: interCronometro = 60000
   },
+  /* TUNED 2026-11-20: Valeria found the levels too easy and slow on a big screen, so objects
+     come faster than in the original and each level shortens the intervals further. */
   spawn: {
-    meteoriteEveryMs: 5000, // code: intervaloEnemigo = 5000
-    trapEveryMs: 10000,     // code: intervaloTrampas = 10000
-    starEveryMs: 12000,     // code: intervaloComodin = 12000
+    meteoriteEveryMs: 2500, // level 1. Original code: intervaloEnemigo = 5000
+    trapEveryMs: 6000,      // level 1. Original code: intervaloTrampas = 10000
+    starEveryMs: 12000,     // code: intervaloComodin = 12000 (unchanged: stars are the lifeline)
+    /* Interval multiplier per level (1-4). Level 3 meteorites every 1.4 s; level 4 every 1.1 s. */
+    levelScale: [1, 0.75, 0.55, 0.45],
     /* PROVISIONAL: delay before the first object of each kind, so the screen is not
        empty at the start and the three kinds do not appear all at once. */
     firstDelayMs: { meteorite: 400, trap: 3000, star: 6000 }
@@ -58,17 +64,18 @@ CB.config = {
   /* ---------- PROVISIONAL (not from the original) ---------- */
   levels: [
     /* Points needed to clear each level. Unknown in the original.
-       Keep in mind: one meteorite every 5 s for 60 s is 12 meteorites, 600 points
-       at most, before extra time. A target above that cannot be reached unless
-       the spawn rate changes. The Figma mock-up shows "400 pts" during level 1. */
-    { targetScore: 300 },
+       TUNED 2026-11-20 (were 300 / 400 / 500) together with the faster spawns:
+       level 1 offers ~24 meteorites in 60 s (1200 points), so 400 needs 8 hits;
+       level 2 ~31 (550 = 11 hits); level 3 ~42 (700 = 14 hits), all moving faster.
+       The Figma mock-up shows "400 pts" during level 1. */
     { targetScore: 400 },
-    { targetScore: 500 }
+    { targetScore: 550 },
+    { targetScore: 700 }
   ],
   scoreResetsEachLevel: true,  // unknown: does the score carry over between levels?
   movement: {
-    speedPxPerSec: 180,        // original uses one shared, variable speed (velEne); value unknown
-    speedGrowthPerLevel: 1.25, // unknown whether speed changes by level
+    speedPxPerSec: 260,        // TUNED 2026-11-20 (was 180). Original: one shared, variable speed (velEne), value unknown
+    speedGrowthPerLevel: 1.35, // TUNED 2026-11-20 (was 1.25): 260, 351, 474, 640 px/s on levels 1-4
     lifetimeMs: 6000,          // unknown when an object stops being "alive"
     /* Open question 7 (docs/01): direction of movement. The trail in the sprite points
        up-right, so the rock is drawn drifting down-left along it. */
