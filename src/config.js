@@ -141,21 +141,41 @@ CB.config = {
     }
   },
 
-  /* ADAPTATION: sound. The original game had none (docs/03-assets.md). Music and effects are
-     synthesized in src/audio.js, so the game ships no audio files. If Valeria adds her own tracks
-     with the names in "files", those play instead. Sound starts after the first click or key
-     (browser autoplay rules) and the choice to mute is remembered in localStorage. */
+  /* ADAPTATION: sound. The original game had none (docs/03-assets.md). Since 2026-11-20 the game
+     ships public-domain (CC0) music and effects in assets/audio (credits: assets/audio/CREDITOS.md).
+     src/audio.js plays those files; if one is missing or the browser cannot play its format, a
+     synthesized version takes its place, so nothing is ever silent. Sound starts after the first
+     click or key (browser autoplay rules) and the choice to mute is remembered in localStorage. */
   audio: {
-    musicVolume: 0.35,         // 0..1
-    sfxVolume: 0.6,            // 0..1
+    musicVolume: 0.5,          // 0..1, applied to the music files
+    sfxVolume: 0.7,            // 0..1, times each effect's own gain below
     duckWhilePaused: 0.3,      // music level while paused, relative to musicVolume
     storageKey: 'cosmic-boing-sound',
+    /* Music per state. 'title' covers the three menu screens; 'play' covers levels 1-3. */
     files: {
-      title: 'assets/audio/music-title.mp3',
-      play: 'assets/audio/music-play.mp3',
-      boss: 'assets/audio/music-boss.mp3',
-      win: 'assets/audio/music-win.mp3',
-      over: 'assets/audio/music-over.mp3'
+      title: 'assets/audio/music-title.mp3',   // "Alien Spaceship Atmosphere" (FreePD, CC0), loops
+      play: 'assets/audio/music-play.mp3',     // "Blippy Trance", Kevin MacLeod (FreePD, CC0), loops
+      boss: 'assets/audio/music-boss.mp3',     // "Epic Boss Battle" (FreePD, CC0), loops
+      win: 'assets/audio/music-win.mp3',       // "Strength of the Titans", Kevin MacLeod (FreePD, CC0), once
+      over: 'assets/audio/music-over.mp3'      // "Go On Without Me" (FreePD, CC0), once
+    },
+    preloadFirst: ['title', 'play'],           // fetched on load; the rest when a game starts
+    /* One effect per event. All from "The Essential Retro Video Game Sound Effects Collection"
+       by Juhani Junkala (CC0). gain is relative to sfxVolume; repeat/everyMs play a short loop a few times. */
+    sfx: {
+      shoot:        { file: 'assets/audio/sfx/shoot.wav',         gain: 0.45 },
+      hitMeteorite: { file: 'assets/audio/sfx/hit-meteorite.wav', gain: 0.8 },
+      hitTrap:      { file: 'assets/audio/sfx/hit-trap.wav',      gain: 0.6 },
+      star:         { file: 'assets/audio/sfx/star.wav',          gain: 0.6 },
+      bossHit:      { file: 'assets/audio/sfx/boss-hit.wav',      gain: 0.9 },
+      bossArrives:  { file: 'assets/audio/sfx/boss-arrives.wav',  gain: 0.6, repeat: 3, everyMs: 790 },
+      levelUp:      { file: 'assets/audio/sfx/level-up.wav',      gain: 0.7 },
+      warning:      { file: 'assets/audio/sfx/warning.wav',       gain: 0.6, repeat: 2, everyMs: 800 },
+      pause:        { file: 'assets/audio/sfx/pause.wav',         gain: 0.8 },
+      resume:       { file: 'assets/audio/sfx/resume.wav',        gain: 1.0 },
+      lose:         { file: 'assets/audio/sfx/lose.wav',          gain: 0.8 },
+      uiPress:      { file: 'assets/audio/sfx/ui-press.wav',      gain: 0.5 },
+      uiToggle:     { file: 'assets/audio/sfx/ui-toggle.wav',     gain: 0.6 }
     }
   },
 

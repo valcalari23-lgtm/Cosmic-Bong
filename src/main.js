@@ -51,6 +51,12 @@ window.CB = window.CB || {};
     CB.screens.setLang(CB.config.defaultLang);
     watchAssetSlots();
 
+    /* Every button click makes a sound; the two corner switches have a lighter one. */
+    document.addEventListener('click', function (event) {
+      var btn = event.target.closest ? event.target.closest('button') : null;
+      if (!btn) { return; }
+      CB.audio.play(btn.classList.contains('corner-btn') ? 'uiToggle' : 'uiPress');
+    });
     document.getElementById('btn-lang').addEventListener('click', CB.screens.toggleLang);
     document.addEventListener('keydown', function (event) {
       if (event.repeat) { return; }

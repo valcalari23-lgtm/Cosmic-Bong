@@ -71,7 +71,7 @@ src/strings.js        textos ES/EN con su origen
 src/assets.js         lista de imágenes y precarga
 src/stage.js          escalado 16:9, fondo espacial, bucle de animación
 src/screens.js        cambio de pantalla, idioma, anuncios
-src/audio.js          música y efectos con Web Audio (sin archivos); pistas propias opcionales
+src/audio.js          música y efectos CC0 de assets/audio (créditos en CREDITOS.md); respaldo sintetizado
 src/input.js          mouse, teclado, inclinación del celular
 src/entities.js       objetos, jefe, explosiones, héroe, mira
 src/hud.js            barra, puntos, reloj, letreros, pausa

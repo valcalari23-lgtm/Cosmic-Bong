@@ -93,6 +93,7 @@ Las reglas y los datos por confirmar están en `01-diseno-del-juego.md`.
 - Botón de sonido abajo a la izquierda, tecla M, estado recordado en el navegador. La música baja de volumen en pausa.
 - Las ilustraciones `controls-aim.png` y `controls-shoot.png` de Valeria ocupan los recuadros de la pantalla de Controles.
 - Si Valeria entrega pistas propias con los nombres de `docs/03-assets.md`, el juego las usa en lugar de las generadas.
+- Tercera vuelta el mismo día: música y efectos reales de dominio público (CC0) con ambiente espacial, elegidos y documentados en `assets/audio/CREDITOS.md`; cada botón suena al pulsarlo. Lo sintetizado queda como respaldo.
 - Segunda vuelta el mismo día: música y efectos en estilo arcade clásico de disparos, y niveles más difíciles (meteoritos cada 2.5 s en el nivel 1 y más seguidos en cada nivel, objetos más rápidos, metas 400 / 550 / 700). Valores en `src/config.js` marcados TUNED, con el original al lado.
 
 **Probar:** abrir el juego y pulsar "Presiona para iniciar": empieza la música de menú. En Controles se ven las dos ilustraciones. Al jugar cambia la música; cada disparo, acierto, tanque y estrella suena distinto; a los 10 segundos finales hay un doble pitido; el jefe trae otra música; ganar y perder tienen su propia melodía corta. M o el botón del altavoz silencian todo y el estado se mantiene al recargar.

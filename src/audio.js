@@ -1,15 +1,17 @@
 /* Cosmic Boing: music and sound effects.
 
    The original game had no audio (docs/03-assets.md), so everything here is new (ADAPTATION).
-   Music and effects are synthesized with the Web Audio API: the game ships no audio files and
-   fetches nothing. If Valeria adds her own tracks under the names in CB.config.audio.files,
-   those play instead of the synthesized loops (same fallback idea as the images).
+   Since 2026-11-20 the game ships public-domain (CC0) music and effects in assets/audio
+   (CB.config.audio.files and .sfx; credits in assets/audio/CREDITOS.md). They play through
+   <audio> elements, which work from file:// without fetch. If a file is missing, fails to load
+   or the browser cannot play its format, the synthesized version below takes its place, so no
+   event is ever silent (same fallback idea as the images).
 
    Browsers only start sound after a user gesture, so unlock() runs on the first click or key.
    Without Web Audio (very old browser, the test harness) every function is a harmless no-op.
 
-   Tracks: 'title' (menus), 'play' (levels 1-3), 'boss' (level 4), 'win' and 'over' (jingles).
-   Effects: see SFX below. */
+   Tracks: 'title' (menus), 'play' (levels 1-3), 'boss' (level 4), 'win' and 'over' (once).
+   Effects: see SFX below (names shared with CB.config.audio.sfx). */
 
 window.CB = window.CB || {};
 
@@ -31,6 +33,7 @@ CB.audio = (function () {
   var current = null;      // music track playing now
   var player = null;       // { stop() } of the running track
   var files = {};          // track name -> HTMLAudioElement that finished loading
+  var sfxFiles = {};       // effect name -> HTMLAudioElement that finished loading (cloned to play)
   var button = null;
 
   var MENU_SCREENS = { title: true, instructions: true, controls: true };
@@ -322,9 +325,37 @@ CB.audio = (function () {
 
   /* ---------- public: effects ---------- */
 
+  /* Plays one effect: the CC0 file when it loaded (cloned so quick repeats overlap), otherwise
+     the synthesized version. repeat/everyMs in the config play short loops a few times. */
   function play(name) {
-    if (!ready() || !SFX[name]) { return; }
-    SFX[name](ctx.currentTime);
+    if (!ready()) { return; }
+    var def = cfg.sfx && cfg.sfx[name];
+    var src = sfxFiles[name];
+    if (src && def) {
+      if (muted) { return; }
+      var times = def.repeat || 1;
+      for (var i = 0; i < times; i++) {
+        (function (delay) {
+          window.setTimeout(function () {
+            if (muted) { return; }
+            var a = src.cloneNode();
+            a.volume = Math.min(1, cfg.sfxVolume * (def.gain || 1));
+            var p = a.play();
+            if (p && p.catch) { p.catch(noop); }
+          }, delay);
+        })(i * (def.everyMs || 500));
+      }
+      return;
+    }
+    if (SFX[name]) { SFX[name](ctx.currentTime); }
+  }
+
+  /* Asks the browser to fetch the music that is not preloaded (called when a game starts). */
+  function warm() {
+    Object.keys(files).forEach(function (name) {
+      var a = files[name];
+      if (a.preload !== 'auto') { a.preload = 'auto'; a.load(); }
+    });
   }
 
   /* ---------- mute ---------- */
@@ -391,15 +422,38 @@ CB.audio = (function () {
     if (wanted) { music(wanted); }
   }
 
-  /* Optional files from Valeria: used only once they have fully loaded (see cfg.files). */
+  /* The audio files (cfg.files, cfg.sfx): each is used only once the browser confirms it can play
+     it. A missing file, a load error or an unsupported format leaves the synthesized fallback. */
+  function mimeOf(path) {
+    var ext = (path.split('.').pop() || '').toLowerCase();
+    return { mp3: 'audio/mpeg', ogg: 'audio/ogg', wav: 'audio/wav', m4a: 'audio/mp4' }[ext] || '';
+  }
+
+  function canPlay(probe, path) {
+    var mime = mimeOf(path);
+    return !mime || !probe.canPlayType || probe.canPlayType(mime) !== '';
+  }
+
   function preloadFiles() {
-    if (typeof window.Audio !== 'function' || !cfg.files) { return; }
-    Object.keys(cfg.files).forEach(function (name) {
+    if (typeof window.Audio !== 'function') { return; }
+    var probe = new window.Audio();
+    var first = cfg.preloadFirst || [];
+    Object.keys(cfg.files || {}).forEach(function (name) {
+      if (!canPlay(probe, cfg.files[name])) { return; }
       var a = new window.Audio();
-      a.preload = 'auto';
-      a.addEventListener('canplaythrough', function () { files[name] = a; });
+      a.preload = first.indexOf(name) !== -1 ? 'auto' : 'metadata';
+      a.addEventListener('canplay', function () { files[name] = a; });
       a.addEventListener('error', noop);          // missing file: the synthesized track stays
       a.src = cfg.files[name];
+    });
+    Object.keys(cfg.sfx || {}).forEach(function (name) {
+      var def = cfg.sfx[name];
+      if (!def.file || !canPlay(probe, def.file)) { return; }
+      var a = new window.Audio();
+      a.preload = 'auto';
+      a.addEventListener('canplaythrough', function () { sfxFiles[name] = a; });
+      a.addEventListener('error', noop);
+      a.src = def.file;
     });
   }
 
@@ -431,6 +485,7 @@ CB.audio = (function () {
     init: init,
     music: music,
     play: play,
+    warm: warm,
     duck: duck,
     onScreen: onScreen,
     toggle: toggle,
@@ -439,6 +494,8 @@ CB.audio = (function () {
     isMuted: function () { return muted; },
     isSupported: function () { return supported; },
     current: function () { return current; },
+    /* Which real files are ready (the rest fall back to synthesis). For the debug overlay and tests. */
+    loaded: function () { return { music: Object.keys(files), sfx: Object.keys(sfxFiles) }; },
     tracks: TRACKS
   };
 })();

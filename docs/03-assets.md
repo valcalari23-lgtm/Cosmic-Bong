@@ -47,17 +47,18 @@ Cinco de estos sprites existen también como SVG, exportados por Valeria el 18 d
 
 ### `assets/audio/`
 
-Vacía a propósito: el juego no trae archivos de sonido. La música y los efectos se generan en el navegador con Web Audio (`src/audio.js`), ver `docs/05-notas-para-portafolio.md`. Si Valeria quiere sus propias pistas, basta con guardarlas con estos nombres y el juego las usa en lugar de las generadas:
+Música y efectos de dominio público (CC0), incorporados el 20 de noviembre de 2026 a pedido de Valeria ("música de espacio, libre de derechos, que cambie con el juego"). Procedencia, autores y SHA-256 de cada archivo en `assets/audio/CREDITOS.md`.
 
-| Archivo | Cuándo suena |
-|---|---|
-| `music-title.mp3` | Inicio, Instrucciones y Controles (en bucle) |
-| `music-play.mp3` | Niveles 1 a 3 (en bucle) |
-| `music-boss.mp3` | Nivel 4, el jefe (en bucle) |
-| `music-win.mp3` | Pantallas de victoria (una vez) |
-| `music-over.mp3` | Game Over (una vez) |
+| Archivo | Pieza | Cuándo suena |
+|---|---|---|
+| `music-title.mp3` | "Alien Spaceship Atmosphere" (FreePD, CC0) | Inicio, Instrucciones y Controles (en bucle) |
+| `music-play.mp3` | "Blippy Trance", Kevin MacLeod (FreePD, CC0) | Niveles 1 a 3 (en bucle) |
+| `music-boss.mp3` | "Epic Boss Battle" (FreePD, CC0) | Nivel 4, el jefe (en bucle) |
+| `music-win.mp3` | "Strength of the Titans", Kevin MacLeod (FreePD, CC0) | Pantallas de victoria (una vez) |
+| `music-over.mp3` | "Go On Without Me" (FreePD, CC0) | Game Over (una vez) |
+| `sfx/*.wav` | 13 efectos de "The Essential Retro Video Game Sound Effects Collection", Juhani Junkala (CC0) | Disparo, aciertos, tanque, estrella, jefe, nivel superado, alarma de 10 s, pausa, clic en botones, derrota |
 
-Solo audio propio o con licencia que permita publicarlo.
+Para cambiar una pieza, reemplazar el archivo con el mismo nombre (o la ruta en `src/config.js`, bloque `audio`) y anotarlo en `CREDITOS.md`. Si un archivo falta o el navegador no reproduce su formato, `src/audio.js` genera una versión sintetizada.
 
 ### `assets/fonts/`
 
@@ -92,7 +93,7 @@ Lo que falta y quién lo resuelve.
 | Tanque decorativo girado | 0, opcional | 38:2188 | Decoración de la pantalla de inicio |
 | Ilustraciones de controles | 6 | 38:2536 y 38:2574 | Resuelto el 20 de noviembre de 2026: Valeria entregó `controls-aim.png` y `controls-shoot.png` (ver `assets/ui/`). Muestran el celular, también en computadora, por decisión suya; el texto y las teclas dibujadas siguen explicando el mouse y el teclado. |
 | Viñetas del storyboard | 8, opcional | 38:1666, 38:1690, 38:1801, 38:1831, 38:1855, 38:1731 | Solo si la historia va dentro del juego |
-| Sonidos y música | 9 | No existen | Resuelto el 20 de noviembre de 2026 con música y efectos generados por código (`src/audio.js`). Si Valeria prefiere pistas propias, ver `assets/audio/`. |
+| Sonidos y música | 9 | No existen | Resuelto el 20 de noviembre de 2026: primero con sonido generado por código y, el mismo día a pedido de Valeria, con música y efectos CC0 reales (ver `assets/audio/`). Lo generado queda como respaldo. |
 
 Las flechas blancas de Instrucciones y los textos "+50" y "−50" no necesitan imagen: se hacen con texto real.
 

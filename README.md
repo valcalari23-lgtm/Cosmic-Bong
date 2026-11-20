@@ -12,7 +12,7 @@ Código: https://github.com/valcalari23-lgtm/Cosmic-Bong
 
 Doble clic en `index.html`. Se abre en tu navegador. No hay que instalar nada.
 
-El juego completo está construido (etapas 0 a 9 de `docs/02-plan-por-etapas.md`): cuatro niveles, jefe, Game Over, victoria, instrucciones y controles, música y efectos, en español e inglés y jugable con mouse, solo teclado o inclinando el celular. La tecla M o el botón del altavoz silencian el sonido.
+El juego completo está construido (etapas 0 a 9 de `docs/02-plan-por-etapas.md`): cuatro niveles, jefe, Game Over, victoria, instrucciones y controles, música y efectos, en español e inglés y jugable con mouse, solo teclado o inclinando el celular. La tecla M o el botón del altavoz silencian el sonido. La música y los efectos son de dominio público (CC0): FreePD y la colección retro de Juhani Junkala, ver `assets/audio/CREDITOS.md`.
 
 ## Empezar con Claude Code
 
@@ -54,7 +54,7 @@ cosmic-boing/
 │   ├── ui/                 logo, mira, panel, iconos
 │   ├── backgrounds/        paisaje final y vidrio roto de Game Over
 │   ├── fonts/              Poppins
-│   └── audio/              vacía: el sonido se genera por código (ver docs/03-assets.md)
+│   └── audio/              música y efectos CC0 (créditos en assets/audio/CREDITOS.md)
 ├── docs/
 │   ├── 01-diseno-del-juego.md     reglas con su origen y preguntas abiertas
 │   ├── 02-plan-por-etapas.md      qué se construye en cada etapa y cómo probarla

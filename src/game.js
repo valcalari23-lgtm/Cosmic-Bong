@@ -183,6 +183,7 @@ CB.game = (function () {
     stopPlay();
     state = 'over';
     CB.screens.show('gameover');
+    CB.audio.play('lose');
     CB.audio.music('over');
     CB.screens.announce(CB.t('gameOver.title'));
   }
@@ -319,6 +320,7 @@ CB.game = (function () {
     score = 0;
     CB.input.resetAim();
     CB.hud.hidePause();
+    CB.audio.warm();                 // start fetching the boss, win and Game Over music now
     beginLevel(false);
     CB.screens.show('game');
     CB.input.enable();
