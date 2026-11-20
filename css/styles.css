@@ -707,11 +707,11 @@ html, body {
 .panel-instructions .rules {
   max-height: 480px;
   overflow-y: auto;
-  padding-right: 16px;
+  padding: 6px 16px 10px 0;   /* small overhangs (crosshair overlays) stay inside, no stray scrollbar */
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
 }
-.panel-instructions .press { align-self: center; margin-top: auto; }   /* spreads the content over the panel */
+.panel-instructions { padding-bottom: 150px; }   /* room for the bottom-right button */
 .deco-panel-meteorite-top { left: 345px; top: 40px; width: 110px; }
 .deco-panel-meteorite-right { left: 1680px; top: 290px; width: 90px; transform: scaleX(-1) rotate(-10deg); }
 
@@ -760,7 +760,7 @@ html, body {
   top: 50%;
   transform: translate(-60%, -45%);
 }
-.target .sight-star { transform: translate(-70%, -35%); }
+.target .sight-star { transform: translate(-70%, -42%); }
 .boom { height: 88px; width: auto; }
 /* White arrow drawn with CSS (the original uses a plain white arrow). */
 .arrow {
@@ -798,34 +798,45 @@ html, body {
 
 .panel-instructions .body-text { font-size: 30px; opacity: 0.9; }
 
-/* Controls (stage 10 layout): two columns, each an illustration, a verb and a small table
-   (device on the left, action on the right); shortcuts as chips underneath. One size per level
-   of the hierarchy: title 61, verb 44, actions 28, labels 20 uppercase. */
-.panel-controls { gap: 28px; padding-top: 50px; }
+/* Controls (stage 11 layout, Valeria's notes): the illustration is the hero of the screen, big;
+   under it the verb; under that a small left-aligned table (device -> action). Shortcuts small and
+   right-aligned; the "press to start" button bottom-right, where a "next" action is expected. */
+.panel-controls {
+  align-items: flex-start;
+  text-align: left;
+  gap: 14px;
+  padding: 48px 110px 40px 250px;
+}
+.panel-controls .screen-title { align-self: flex-start; margin-bottom: 4px; }
 .controls-columns {
   display: flex;
   width: 100%;
-  justify-content: center;
+  justify-content: flex-start;
+  gap: 48px;
 }
 .control {
-  flex: 1;
+  flex: 0 1 auto;
+  width: 540px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 0 30px;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 0;
 }
-.control + .control { border-left: 2px solid rgba(255, 255, 255, 0.35); }
+.control + .control { border-left: 2px solid rgba(255, 255, 255, 0.25); padding-left: 48px; }
 .slot-control {
   position: relative;
-  width: 460px;
-  height: 210px;
+  width: 540px;
+  height: 300px;
   font-size: 24px;
 }
+/* One column in the space run: the illustration can be bigger still. */
+#stage.mode-run .control, #stage.mode-run .slot-control { width: 700px; }
+#stage.mode-run .slot-control { height: 360px; }
 .control-title {
-  margin: 0 0 6px;
+  margin: 4px 0 6px;
   font-family: var(--font-body);
-  font-size: 44px;
+  font-size: 40px;
   font-weight: 600;
   line-height: 1;
 }
@@ -833,65 +844,80 @@ html, body {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
 }
 .control-row {
   display: flex;
   align-items: center;
-  gap: 18px;
-  min-height: 52px;
+  gap: 14px;
+  min-height: 38px;
 }
 .control-row.phone-only { display: none; }
 html.is-touch .control-row.phone-only { display: flex; }
 .control-row dt {
-  width: 124px;
+  width: 96px;
   flex: none;
-  text-align: right;
-  font-size: 20px;
+  text-align: left;
+  font-size: 15px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  opacity: 0.75;
+  opacity: 0.7;
 }
 .control-row dd {
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 30px;
+  gap: 8px;
+  font-size: 23px;
   line-height: 1.2;
   text-align: left;
 }
-.or { font-size: 22px; opacity: 0.75; }
-.keys { display: inline-flex; gap: 6px; }
+.or { font-size: 18px; opacity: 0.75; }
+.keys { display: inline-flex; gap: 5px; }
 kbd {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 44px;
-  height: 44px;
-  padding: 0 12px;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 9px;
   border: 2px solid var(--metal);
-  border-bottom-width: 4px;
-  border-radius: 10px;
+  border-bottom-width: 3px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.08);
   color: var(--white);
   font-family: var(--font-body);
-  font-size: 22px;
+  font-size: 17px;
   font-weight: 600;
   line-height: 1;
 }
+/* Shortcuts: a small right-aligned column above the button. */
 .shortcuts {
   list-style: none;
-  margin: 6px 0 0;
+  margin: 0;
   padding: 0;
+  position: absolute;
+  right: 110px;
+  bottom: 146px;
   display: flex;
-  justify-content: center;
-  gap: 48px;
-  font-size: 26px;
+  flex-direction: row;
+  align-items: center;
+  gap: 26px;
+  font-size: 19px;
+  opacity: 0.9;
 }
-.shortcuts li { display: inline-flex; align-items: center; gap: 12px; }
-.shortcuts kbd { min-width: 40px; height: 40px; font-size: 20px; }
+.shortcuts li { display: inline-flex; align-items: center; gap: 10px; }
+.shortcuts kbd { min-width: 30px; height: 30px; font-size: 15px; padding: 0 7px; }
+/* The "next" button sits bottom-right on both panels. */
+.panel-controls .press,
+.panel-instructions .press {
+  position: absolute;
+  right: 96px;
+  bottom: 40px;
+  margin: 0;
+  align-self: auto;
+}
 .control-extra {
   margin: 0;
   font-size: 30px;
