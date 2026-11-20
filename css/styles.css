@@ -281,7 +281,7 @@ html, body {
 .screen-title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 52px;
+  font-size: 60px;
   font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -705,7 +705,7 @@ html, body {
 .panel-instructions .screen-title { align-self: flex-start; margin-bottom: 6px; }
 /* Safety: if a list ever outgrows the panel it scrolls inside it; the goal line and the button stay put. */
 .panel-instructions .rules {
-  max-height: 480px;
+  max-height: 500px;
   overflow-y: auto;
   padding: 6px 16px 10px 0;   /* small overhangs (crosshair overlays) stay inside, no stray scrollbar */
   scrollbar-width: thin;
@@ -724,12 +724,12 @@ html, body {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 30px;
 }
 .rule {
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 80px;
 }
 .rule-visual {
   display: flex;
@@ -798,45 +798,43 @@ html, body {
 
 .panel-instructions .body-text { font-size: 30px; opacity: 0.9; }
 
-/* Controls (stage 11 layout, Valeria's notes): the illustration is the hero of the screen, big;
-   under it the verb; under that a small left-aligned table (device -> action). Shortcuts small and
-   right-aligned; the "press to start" button bottom-right, where a "next" action is expected. */
+/* Controls (layout from Valeria's Figma, 2026-11-20): two columns. Each holds its illustration,
+   the verb centred under it, a small device table (label / action) and its own shortcuts.
+   The next button sits bottom-right. In the space run the left column is just the big
+   illustration and the right column is the "move" block. */
 .panel-controls {
   align-items: flex-start;
   text-align: left;
-  gap: 14px;
-  padding: 48px 110px 40px 250px;
+  gap: 10px;
+  padding: 44px 110px 40px 250px;
 }
-.panel-controls .screen-title { align-self: flex-start; margin-bottom: 4px; }
+.panel-controls .screen-title { align-self: flex-start; }
 .controls-columns {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 56px;
   width: 100%;
-  justify-content: flex-start;
-  gap: 48px;
 }
 .control {
-  flex: 0 1 auto;
-  width: 540px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 6px;
-  padding: 0;
+  gap: 10px;
+  min-width: 0;
 }
-.control + .control { border-left: 2px solid rgba(255, 255, 255, 0.25); padding-left: 48px; }
+.control-shoot { border-left: 2px solid rgba(255, 255, 255, 0.25); padding-left: 56px; }
 .slot-control {
   position: relative;
-  width: 540px;
-  height: 300px;
+  width: 100%;
+  max-width: 560px;
+  height: 320px;
   font-size: 24px;
 }
-/* One column in the space run: the illustration can be bigger still. */
-#stage.mode-run .control, #stage.mode-run .slot-control { width: 700px; }
-#stage.mode-run .slot-control { height: 360px; }
 .control-title {
-  margin: 4px 0 6px;
+  align-self: center;
+  margin: -4px 0 8px;
   font-family: var(--font-body);
-  font-size: 40px;
+  font-size: 48px;
   font-weight: 600;
   line-height: 1;
 }
@@ -844,21 +842,21 @@ html, body {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 .control-row {
   display: flex;
   align-items: center;
-  gap: 14px;
-  min-height: 38px;
+  gap: 18px;
+  min-height: 42px;
 }
 .control-row.phone-only { display: none; }
 html.is-touch .control-row.phone-only { display: flex; }
 .control-row dt {
-  width: 96px;
+  width: 112px;
   flex: none;
   text-align: left;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -868,56 +866,60 @@ html.is-touch .control-row.phone-only { display: flex; }
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 23px;
+  gap: 10px;
+  font-size: 28px;
   line-height: 1.2;
   text-align: left;
 }
-.or { font-size: 18px; opacity: 0.75; }
-.keys { display: inline-flex; gap: 5px; }
+.or { font-size: 20px; opacity: 0.75; }
+.keys { display: inline-flex; gap: 6px; }
 kbd {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 34px;
-  height: 34px;
-  padding: 0 9px;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 10px;
   border: 2px solid var(--metal);
   border-bottom-width: 3px;
-  border-radius: 8px;
+  border-radius: 9px;
   background: rgba(255, 255, 255, 0.08);
   color: var(--white);
   font-family: var(--font-body);
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 600;
   line-height: 1;
 }
-/* Shortcuts: a small right-aligned column above the button. */
+/* Shortcuts live inside each column, under its table. */
 .shortcuts {
   list-style: none;
-  margin: 0;
+  margin: 6px 0 0;
   padding: 0;
-  position: absolute;
-  right: 110px;
-  bottom: 146px;
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 26px;
-  font-size: 19px;
-  opacity: 0.9;
+  gap: 32px;
+  font-size: 24px;
 }
-.shortcuts li { display: inline-flex; align-items: center; gap: 10px; }
-.shortcuts kbd { min-width: 30px; height: 30px; font-size: 15px; padding: 0 7px; }
+.shortcuts li { display: inline-flex; align-items: center; gap: 12px; }
+.shortcuts kbd { min-width: 36px; height: 36px; font-size: 17px; padding: 0 8px; }
+/* Space run: big illustration on the left, "move" block on the right (Valeria's frame). */
+#stage.mode-run .controls-columns { grid-template-columns: 640px 1fr; column-gap: 80px; }
+#stage.mode-run .control-shoot { border-left: 0; padding-left: 0; padding-top: 40px; }
+#stage.mode-run .control-aim .slot-control { max-width: 640px; height: 460px; }
+#stage.mode-run .control-title { align-self: flex-start; margin: 0 0 10px; }
+#stage.mode-run .shortcuts { margin-top: 16px; }
 /* The "next" button sits bottom-right on both panels. */
 .panel-controls .press,
 .panel-instructions .press {
   position: absolute;
-  right: 96px;
-  bottom: 40px;
+  right: 60px;
+  bottom: 22px;
   margin: 0;
   align-self: auto;
+  font-size: 50px;
 }
+.panel-controls .press img,
+.panel-instructions .press img { width: 90px; height: 90px; }
 .control-extra {
   margin: 0;
   font-size: 30px;
