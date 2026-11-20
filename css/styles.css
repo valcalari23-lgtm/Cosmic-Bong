@@ -120,7 +120,7 @@ html, body {
   cursor: pointer;
 }
 .press img { width: 100px; height: 100px; }
-.press:hover { background: rgba(255, 255, 255, 0.08); }
+.press:hover { opacity: 0.85; }
 
 #screen-title .press {
   position: absolute;
@@ -302,16 +302,18 @@ html, body {
   position: absolute;
   bottom: 24px;
   padding: 10px 18px;
-  border: 2px solid rgba(255, 255, 255, 0.7);
+  border: 0;
   border-radius: 999px;
-  background: rgba(15, 9, 18, 0.75);
+  background: transparent;
   color: var(--white);
   font-family: var(--font-body);
   font-size: 24px;
   font-weight: 600;
   cursor: pointer;
 }
-.corner-btn:hover { background: rgba(15, 9, 18, 0.95); }
+.corner-btn:hover { opacity: 0.8; }
+/* On the gold Game Over screen the corner switches turn dark to keep their contrast. */
+#stage[data-screen="gameover"] .corner-btn { color: var(--gameover-ink); }
 .sound {
   left: 28px;
   width: 56px;
@@ -909,25 +911,25 @@ kbd {
 #stage.mode-run .control-title { align-self: flex-start; margin: 0 0 10px; }
 #stage.mode-run .shortcuts { margin-top: 16px; }
 /* Next arrow (Valeria, 2026-11-20): a round button on the right edge of the panel, mid-height. */
+/* Valeria: no circle, no box; just the arrow, bottom-right of the panel. */
 .panel-next {
   position: absolute;
-  right: 44px;
-  top: 50%;
-  width: 96px;
+  right: 56px;
+  bottom: 36px;
+  width: 120px;
   height: 96px;
-  transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  border: 3px solid rgba(255, 255, 255, 0.7);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
   color: var(--white);
   cursor: pointer;
 }
-.panel-next:hover { background: rgba(255, 255, 255, 0.18); }
-.panel-next svg { width: 52px; height: 52px; }
+.panel-next:hover { opacity: 0.8; }
+.panel-next svg { width: 110px; height: 88px; }
 
 /* Ready panel: only the big "Press to start", centred (Valeria's frame). */
 .panel-ready { justify-content: center; align-items: center; padding: 0 120px 0 240px; }

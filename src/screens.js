@@ -65,6 +65,8 @@ CB.screens = (function () {
       if (match) { target = all[i]; }
     }
     CB.state.screen = name;
+    var stageEl = document.getElementById('stage');
+    if (stageEl && stageEl.setAttribute) { stageEl.setAttribute('data-screen', name || ''); }   // css hooks per screen
     if (CB.audio) { CB.audio.onScreen(name); }     // menu screens share the title music
     if (target) {
       /* A screen with its own tabindex (the game area) takes focus itself: its buttons
