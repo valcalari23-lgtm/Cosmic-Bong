@@ -29,18 +29,33 @@ CB.entities = (function () {
 
   /* All three kinds share one speed and direction (the original used one shared velEne).
      The trails in the sprites point up-right, so bodies drift down-left along them. */
-  function spawn(kind, speed) {
+  /* opts.fromTop (meteor shower mode): the object enters above the stage and falls, roughly
+     straight down, and lives until it leaves the stage. Otherwise (mission) it appears inside
+     the stage and drifts down-left for movement.lifetimeMs. */
+  function spawn(kind, speed, opts) {
+    opts = opts || {};
     var margin = motion.spawnMargin;
-    var angle = motion.driftAngleDeg * Math.PI / 180;
     var v = typeof speed === 'number' ? speed : motion.speedPxPerSec;   // CB.levels.speed(level)
+    var x = margin.left + Math.random() * (W - margin.left - margin.right);
+    var y, angle, lifetime;
+    if (opts.fromTop) {
+      var spread = (CB.config.survival.fallAngleSpreadDeg || 0) * Math.PI / 180;
+      angle = Math.PI / 2 + (Math.random() * 2 - 1) * spread;
+      y = -cfg[kind].size / 2;
+      lifetime = 60;
+    } else {
+      angle = motion.driftAngleDeg * Math.PI / 180;
+      y = margin.top + Math.random() * (H - margin.top - margin.bottom);
+      lifetime = motion.lifetimeMs / 1000;
+    }
     return {
       kind: kind,
-      x: margin.left + Math.random() * (W - margin.left - margin.right),
-      y: margin.top + Math.random() * (H - margin.top - margin.bottom),
+      x: x,
+      y: y,
       vx: Math.cos(angle) * v,
       vy: Math.sin(angle) * v,
       age: 0,
-      lifetime: motion.lifetimeMs / 1000
+      lifetime: lifetime
     };
   }
 

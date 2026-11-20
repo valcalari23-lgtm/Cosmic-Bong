@@ -15,3 +15,4 @@ node_modules/
 
 # Configuración local de la app Claude Code (servidor de vista previa)
 .claude/
+*.zip

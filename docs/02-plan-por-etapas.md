@@ -87,6 +87,17 @@ Las reglas y los datos por confirmar están en `01-diseno-del-juego.md`.
 - Subir a GitHub Pages o similar para enlazarlo desde el portafolio.
 - Control por giroscopio en celular como modo extra, fiel al original.
 
+## Etapa 10: segundo modo, controles ordenados y más dificultad (20 de noviembre de 2026)
+
+Pedido de Valeria tras jugar la versión publicada: la pantalla de Controles se leía amontonada, los niveles seguían fáciles y quería "otro juego" con los mismos personajes.
+
+- **Pantalla de Controles:** cada columna es una tabla pequeña (Mouse / Teclado / Celular → qué hacer), teclas dibujadas más chicas, y los atajos (P o Esc, L, M) como fichas debajo. Una sola jerarquía tipográfica: título 61, verbo 44, acciones 28, etiquetas 20 en mayúsculas.
+- **Dificultad (TUNED, segunda pasada):** meteoritos cada 2 s en el nivel 1 y cada nivel acorta más (×0.7, ×0.5, ×0.4); desde el nivel 3 salen de a dos (`spawn.burst`); velocidad 300 px/s creciendo ×1.4 (300, 420, 588, 823); metas 450 / 600 / 800.
+- **Modo "Lluvia de meteoritos"** (`CB.config.survival`, botón extra en la portada y en la última pantalla de victoria): sin tiempo, tres vidas. Los meteoritos caen desde arriba; si uno llega abajo, se pierde una vida; la estrella devuelve una vida (o da 100 puntos si están completas); el tanque sigue restando 50. Cada diez meteoritos sube la oleada y todo acelera (×1.12 la velocidad, ×0.92 los intervalos). La barra cósmica cuenta los meteoritos de la oleada. Game Over muestra puntos y récord (guardado en el navegador). Desde la oleada 5 suena la música del jefe.
+- Las pantallas de Instrucciones cambian su texto según el modo (`#stage.mode-survival`).
+
+**Probar:** en la portada, "Modo extra: Lluvia de meteoritos" → instrucciones con cuatro filas → controles → juego con tres corazones arriba a la izquierda y "Oleada 01". Dejar caer tres meteoritos termina la partida y muestra "Puntos … · Récord …". En la misión, el nivel 3 trae los meteoritos de a dos.
+
 ## Etapa 9: sonido e ilustraciones de controles (20 de noviembre de 2026)
 
 - `src/audio.js`: música por estado (menús, niveles 1 a 3, jefe, victoria, Game Over) y un efecto por evento, todo generado con Web Audio. Sin archivos.

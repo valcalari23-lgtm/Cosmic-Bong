@@ -48,11 +48,13 @@ CB.config = {
   /* TUNED 2026-11-20: Valeria found the levels too easy and slow on a big screen, so objects
      come faster than in the original and each level shortens the intervals further. */
   spawn: {
-    meteoriteEveryMs: 2500, // level 1. Original code: intervaloEnemigo = 5000
-    trapEveryMs: 6000,      // level 1. Original code: intervaloTrampas = 10000
+    meteoriteEveryMs: 2000, // level 1 (2026-11-20 second pass; was 2500). Original code: intervaloEnemigo = 5000
+    trapEveryMs: 5000,      // level 1 (was 6000). Original code: intervaloTrampas = 10000
     starEveryMs: 12000,     // code: intervaloComodin = 12000 (unchanged: stars are the lifeline)
-    /* Interval multiplier per level (1-4). Level 3 meteorites every 1.4 s; level 4 every 1.1 s. */
-    levelScale: [1, 0.75, 0.55, 0.45],
+    /* Interval multiplier per level (1-4). Level 3 meteorites every 1.0 s; level 4 every 0.8 s. */
+    levelScale: [1, 0.7, 0.5, 0.4],
+    /* Meteorites per spawn, per level: from level 3 they come in pairs. */
+    burst: [1, 1, 2, 2],
     /* PROVISIONAL: delay before the first object of each kind, so the screen is not
        empty at the start and the three kinds do not appear all at once. */
     firstDelayMs: { meteorite: 400, trap: 3000, star: 6000 }
@@ -68,14 +70,14 @@ CB.config = {
        level 1 offers ~24 meteorites in 60 s (1200 points), so 400 needs 8 hits;
        level 2 ~31 (550 = 11 hits); level 3 ~42 (700 = 14 hits), all moving faster.
        The Figma mock-up shows "400 pts" during level 1. */
-    { targetScore: 400 },
-    { targetScore: 550 },
-    { targetScore: 700 }
+    { targetScore: 450 },
+    { targetScore: 600 },
+    { targetScore: 800 }
   ],
   scoreResetsEachLevel: true,  // unknown: does the score carry over between levels?
   movement: {
-    speedPxPerSec: 260,        // TUNED 2026-11-20 (was 180). Original: one shared, variable speed (velEne), value unknown
-    speedGrowthPerLevel: 1.35, // TUNED 2026-11-20 (was 1.25): 260, 351, 474, 640 px/s on levels 1-4
+    speedPxPerSec: 300,        // TUNED 2026-11-20, second pass (180 -> 260 -> 300). Original: one shared speed (velEne), value unknown
+    speedGrowthPerLevel: 1.4,  // TUNED 2026-11-20 (1.25 -> 1.35 -> 1.4): 300, 420, 588, 823 px/s on levels 1-4
     lifetimeMs: 6000,          // unknown when an object stops being "alive"
     /* Open question 7 (docs/01): direction of movement. The trail in the sprite points
        up-right, so the rock is drawn drifting down-left along it. */
@@ -184,6 +186,27 @@ CB.config = {
   tilt: {
     rangeDeg: 18,              // tilting this far from the starting hold puts the crosshair at the stage edge
     smoothing: 0.25            // 0..1: higher follows the hand faster, lower is steadier
+  },
+
+  /* ADAPTATION (stage 10, 2026-11-20): second game mode, "Meteor shower" (Lluvia de meteoritos).
+     Endless. Meteorites fall from the top; one that reaches the ground costs a life. Every
+     perWave meteorites the wave number goes up and everything gets faster. Same points as the
+     mission; the star gives a life back (or starPoints when lives are full). */
+  survival: {
+    lives: 3,
+    speedPxPerSec: 240,            // wave 1 falling speed
+    speedGrowthPerWave: 1.12,
+    meteoriteEveryMs: 1800,        // wave 1
+    trapEveryMs: 7000,
+    starEveryMs: 15000,
+    intervalScalePerWave: 0.92,
+    minMeteoriteEveryMs: 500,
+    perWave: 10,                   // meteorites per wave
+    fallAngleSpreadDeg: 18,        // straight down, give or take
+    groundY: 1010,                 // a meteorite whose centre passes this line has landed
+    starPoints: 100,               // when lives are already full
+    bossMusicFromWave: 5,
+    bestKey: 'cosmic-boing-best'   // localStorage key of the best score
   },
 
   /* Only active with index.html?debug=1 */

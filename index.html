@@ -25,6 +25,11 @@
           <img src="assets/ui/icon-tap.png" alt="" width="114" height="114">
           <span data-i18n="title.toStart"></span>
         </button>
+        <!-- Second game mode (stage 10, not in the original): endless meteor shower with three lives. -->
+        <button id="btn-survival" class="press press-mode" type="button">
+          <img src="assets/sprites/meteorite.svg" alt="" width="64" height="64">
+          <span><span class="mode-label" data-i18n="title.extraMode"></span> <span data-i18n="title.survival"></span></span>
+        </button>
         <img class="deco deco-hero" src="assets/sprites/hero-title.png" alt="">
       </section>
 
@@ -57,17 +62,30 @@
               </span>
             </li>
             <li class="rule">
-              <span class="sr-only" data-i18n="instructions.rowStar"></span>
+              <span class="sr-only mission-only" data-i18n="instructions.rowStar"></span>
+              <span class="sr-only survival-only" data-i18n="instructions.rowStarSurvival"></span>
               <span class="rule-visual" aria-hidden="true">
                 <span class="target"><img class="sprite" src="assets/sprites/powerup-star.svg" alt=""><img class="sight sight-star" src="assets/ui/crosshair.png" alt=""></span>
                 <span class="arrow"></span>
                 <img class="boom" src="assets/sprites/explosion.png" alt="">
                 <span class="arrow"></span>
-                <span class="result good">+<img class="clock" src="assets/ui/icon-time.png" alt=""></span>
+                <span class="result good"><span class="mission-only">+<img class="clock" src="assets/ui/icon-time.png" alt=""></span><span class="survival-only">+1 <span class="heart">&hearts;</span></span></span>
+              </span>
+            </li>
+            <!-- Meteor shower only: a meteorite that reaches the hero costs a life. -->
+            <li class="rule survival-only">
+              <span class="sr-only" data-i18n="instructions.rowGround"></span>
+              <span class="rule-visual" aria-hidden="true">
+                <span class="target"><img class="sprite" src="assets/sprites/meteorite.svg" alt=""></span>
+                <span class="arrow"></span>
+                <img class="hero-small" src="assets/sprites/hero-back.png" alt="">
+                <span class="arrow"></span>
+                <span class="result bad">&minus;1 <span class="heart">&hearts;</span></span>
               </span>
             </li>
           </ul>
-          <p class="body-text" data-i18n="instructions.goal"></p>
+          <p class="body-text mission-only" data-i18n="instructions.goal"></p>
+          <p class="body-text survival-only" data-i18n="instructions.goalSurvival"></p>
           <button id="btn-instructions-next" class="press press-small" type="button">
             <span data-i18n="common.press"></span>
             <img src="assets/ui/icon-tap.png" alt="" width="114" height="114">
@@ -84,31 +102,45 @@
         <div class="panel panel-controls">
           <h2 id="controls-heading" class="screen-title" data-i18n="controls.title"></h2>
           <div class="controls-columns">
+            <!-- Each control is a small table: device on the left, what to do on the right.
+                 The phone row only shows on touch devices (html.is-touch, set by src/main.js). -->
             <section class="control" aria-labelledby="control-aim">
               <div class="asset-slot slot-control"><span>assets/ui/controls-aim.png</span><img src="assets/ui/controls-aim.png" alt=""></div>
               <h3 id="control-aim" class="control-title" data-i18n="controls.aim"></h3>
-              <p class="control-how">
-                <span data-i18n="controls.mouseAim"></span>
-                <span class="or" data-i18n="controls.or"></span>
-                <span class="keys" aria-hidden="true"><kbd>&uarr;</kbd><kbd>&darr;</kbd><kbd>&larr;</kbd><kbd>&rarr;</kbd></span>
-                <span class="keys" aria-hidden="true"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span>
-                <span class="sr-only" data-i18n="controls.keysAim"></span>
-              </p>
+              <dl class="control-list">
+                <div class="control-row"><dt data-i18n="controls.mouse"></dt><dd data-i18n="controls.mouseAim"></dd></div>
+                <div class="control-row"><dt data-i18n="controls.keyboard"></dt>
+                  <dd>
+                    <span class="keys" aria-hidden="true"><kbd>&uarr;</kbd><kbd>&darr;</kbd><kbd>&larr;</kbd><kbd>&rarr;</kbd></span>
+                    <span class="or" aria-hidden="true" data-i18n="controls.or"></span>
+                    <span class="keys" aria-hidden="true"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span>
+                    <span class="sr-only" data-i18n="controls.keysAim"></span>
+                  </dd></div>
+                <div class="control-row phone-only"><dt data-i18n="controls.phone"></dt><dd data-i18n="controls.phoneAim"></dd></div>
+              </dl>
             </section>
             <section class="control" aria-labelledby="control-shoot">
               <div class="asset-slot slot-control"><span>assets/ui/controls-shoot.png</span><img src="assets/ui/controls-shoot.png" alt=""></div>
               <h3 id="control-shoot" class="control-title" data-i18n="controls.shoot"></h3>
-              <p class="control-how">
-                <span data-i18n="controls.mouseShoot"></span>
-                <span class="or" data-i18n="controls.or"></span>
-                <span class="keys" aria-hidden="true"><kbd data-i18n="controls.keySpace"></kbd><kbd>Enter</kbd></span>
-                <span class="sr-only" data-i18n="controls.keysShoot"></span>
-              </p>
+              <dl class="control-list">
+                <div class="control-row"><dt data-i18n="controls.mouse"></dt><dd data-i18n="controls.mouseShoot"></dd></div>
+                <div class="control-row"><dt data-i18n="controls.keyboard"></dt>
+                  <dd>
+                    <span class="keys" aria-hidden="true"><kbd data-i18n="controls.keySpace"></kbd></span>
+                    <span class="or" aria-hidden="true" data-i18n="controls.or"></span>
+                    <span class="keys" aria-hidden="true"><kbd>Enter</kbd></span>
+                    <span class="sr-only" data-i18n="controls.keysShoot"></span>
+                  </dd></div>
+                <div class="control-row phone-only"><dt data-i18n="controls.phone"></dt><dd data-i18n="controls.phoneShoot"></dd></div>
+              </dl>
             </section>
           </div>
-          <p class="control-extra"><span data-i18n="controls.pauseHow"></span> &middot; <span data-i18n="controls.langHow"></span> &middot; <span data-i18n="controls.soundHow"></span></p>
-          <!-- Shown only on touch devices (html.is-touch, set by src/main.js). -->
-          <p class="control-extra phone-only" data-i18n="controls.phoneHint"></p>
+          <!-- Shortcuts, one chip each. -->
+          <ul class="shortcuts" data-i18n-aria="controls.shortcuts">
+            <li><span class="keys" aria-hidden="true"><kbd>P</kbd><kbd>Esc</kbd></span><span data-i18n="controls.pause"></span></li>
+            <li><span class="keys" aria-hidden="true"><kbd>L</kbd></span><span data-i18n="controls.language"></span></li>
+            <li><span class="keys" aria-hidden="true"><kbd>M</kbd></span><span data-i18n="controls.sound"></span></li>
+          </ul>
           <button id="btn-controls-start" class="press press-small" type="button">
             <span data-i18n="common.press"></span>
             <img src="assets/ui/icon-tap.png" alt="" width="114" height="114">
@@ -129,9 +161,11 @@
             <div id="hud-bar-fill" class="hud-bar-fill"></div>
           </div>
           <p class="hud-score"><span id="hud-score">0</span> <span data-i18n="hud.points"></span></p>
-          <p class="hud-level"><span data-i18n="hud.level"></span> <span id="hud-level">01</span></p>
+          <p class="hud-level"><span class="mission-only" data-i18n="hud.level"></span><span class="survival-only" data-i18n="hud.wave"></span> <span id="hud-level">01</span></p>
           <!-- Boss lives (level 4 only): ten pips under the level label. -->
           <div id="hud-boss" class="hud-boss" role="img" hidden></div>
+          <!-- Lives (meteor shower mode only): hearts where the clock normally sits. -->
+          <div id="hud-lives" class="hud-lives" role="img" hidden></div>
           <!-- Level timer. The original mock-up shows no clock; placement is provisional (question 5). -->
           <p id="hud-time-box" class="hud-time" role="timer" data-i18n-aria="hud.timeLabel">
             <img src="assets/ui/icon-time.png" alt="" width="87" height="87">
@@ -164,6 +198,8 @@
           <span class="meter-cells"><i></i><i></i><i></i><i></i></span>
           <span class="meter-sign">+</span>
         </div>
+        <!-- Meteor shower only: score and best score (src/game.js fills it). -->
+        <p id="gameover-score" class="gameover-score survival-only"></p>
         <p class="gameover-question" data-i18n="gameOver.restartQuestion"></p>
         <button id="btn-restart" class="press press-ink" type="button">
           <span data-i18n="common.press"></span>
@@ -200,6 +236,10 @@
               <span data-i18n="common.press"></span>
               <img src="assets/ui/icon-tap.png" alt="" width="114" height="114">
               <span data-i18n="win.toRestart"></span>
+            </button>
+            <button id="btn-win-survival" class="press press-ink press-mode" type="button">
+              <img src="assets/sprites/meteorite.svg" alt="" width="56" height="56">
+              <span data-i18n="win.trySurvival"></span>
             </button>
           </div>
         </div>

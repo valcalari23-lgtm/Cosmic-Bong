@@ -21,33 +21,48 @@ CB.strings = {
       soundOff: 'Sonido silenciado'                    // [NEW] live-region text
     },
     title: {
-      toStart: 'para iniciar'                          // [F]
+      toStart: 'para iniciar',                         // [F]
+      extraMode: 'Modo extra',                         // [NEW] label of the second button on the title screen
+      survival: 'Lluvia de meteoritos'                 // [NEW] name of the second game mode
     },
     instructions: {
       title: 'Instrucciones',                          // [F]
       goal: 'Llena la barra cósmica para ganar',       // [NEW] original only has the English line
+      goalSurvival: 'Aguanta la lluvia de meteoritos todo lo que puedas',   // [NEW] second mode
       next: 'para continuar',                          // [NEW] the original advanced on tap
       rowMeteorite: 'Meteorito: dispárale y ganas 50 puntos.',        // [NEW] screen-reader text of row 1
       rowTrap: 'Tanque amarillo: si le disparas pierdes 50 puntos.',  // [NEW] screen-reader text of row 2
-      rowStar: 'Estrella: dispárale y ganas tiempo extra.'            // [NEW] screen-reader text of row 3
+      rowStar: 'Estrella: dispárale y ganas tiempo extra.',           // [NEW] screen-reader text of row 3
+      rowStarSurvival: 'Estrella: dispárale y recuperas una vida.',   // [NEW] second mode, row 3
+      rowGround: 'Si un meteorito llega hasta abajo, pierdes una vida. Tienes tres.'   // [NEW] second mode, row 4
     },
     controls: {
       title: 'Controles',                              // [F]
       aim: 'apuntar',                                  // [NEW] original says "aim"
       shoot: 'disparar',                               // [NEW] original says "shoot"
+      mouse: 'Mouse',                                  // [NEW] row label
+      keyboard: 'Teclado',                             // [NEW] row label
+      phone: 'Celular',                                // [NEW] row label, touch devices only
       mouseAim: 'Mueve el mouse',                      // [NEW] desktop controls
       mouseShoot: 'Clic izquierdo',                    // [NEW] desktop controls
+      phoneAim: 'Inclínalo',                           // [NEW] like the original
+      phoneShoot: 'Toca la pantalla',                  // [NEW] like the original
       or: 'o',                                         // [NEW]
       keySpace: 'Espacio',                             // [NEW] key cap label
-      keysAim: 'o las flechas, o las teclas W, A, S y D',             // [NEW] screen-reader text
-      keysShoot: 'o la barra espaciadora, o Enter',                   // [NEW] screen-reader text
-      pauseHow: 'P o Esc para pausar',                 // [NEW] desktop controls
-      langHow: 'L cambia el idioma',                   // [NEW]
-      soundHow: 'M silencia el sonido',                // [NEW]
-      phoneHint: 'En el celular: inclínalo para apuntar y toca la pantalla para disparar.'   // [NEW] like the original
+      keysAim: 'flechas, o las teclas W, A, S y D',    // [NEW] screen-reader text
+      keysShoot: 'barra espaciadora, o Enter',         // [NEW] screen-reader text
+      shortcuts: 'Atajos',                             // [NEW] screen-reader name of the shortcut list
+      pause: 'Pausa',                                  // [NEW]
+      language: 'Idioma',                              // [NEW]
+      sound: 'Sonido'                                  // [NEW]
     },
     hud: {
       level: 'Nivel',                                  // [F]
+      wave: 'Oleada',                                  // [NEW] second mode
+      lives: 'Vidas: {n}',                             // [NEW] second mode, lives indicator
+      lifeLost: 'Un meteorito cayó. Vidas: {n}',       // [NEW] live-region text
+      lifeBack: 'Vida recuperada. Vidas: {n}',         // [NEW] live-region text
+      waveUp: 'Oleada {n}. Más rápido.',               // [NEW] live-region text
       points: 'pts',                                   // [F]
       barLabel: 'Barra cósmica: avance hacia la meta del nivel',   // [NEW] screen-reader name of the bar
       scored: 'Puntos: {score}',                       // [NEW] live-region text after a hit
@@ -59,14 +74,18 @@ CB.strings = {
     gameOver: {
       title: 'Game Over',                              // [F]
       restartQuestion: '¿Reiniciar?',                  // [F] original shows "REINICIAR?"
-      toRestart: 'para reiniciar'                      // [F]
+      toRestart: 'para reiniciar',                     // [F]
+      score: 'Puntos: {score}',                        // [NEW] second mode
+      best: 'Récord: {best}',                          // [NEW] second mode
+      newBest: '¡Nuevo récord!'                        // [NEW] second mode
     },
     win: {
       headingLine1: 'Ahora sí...',                     // [F]
       headingLine2: 'Rumbo a la Tierra',               // [F]
       home: 'Llegaste a casa',                         // [F]
       playAgain: '¿Volver a jugar?',                   // [F]
-      toRestart: 'para reiniciar'                      // [F]
+      toRestart: 'para reiniciar',                     // [F]
+      trySurvival: 'O prueba la lluvia de meteoritos'  // [NEW] second button on the last screen
     },
     story: {
       alarm: '¡Oh no, vienen meteoritos!',                                        // [NEW] original bubble is in English
@@ -87,7 +106,8 @@ CB.strings = {
     game: {
       areaLabel: 'Zona de juego',                                                         // [NEW]
       help: 'Mueve el mouse o las flechas para apuntar. Clic, Espacio o Enter para disparar.', // [NEW]
-      started: 'Empieza el juego. Dispara a los meteoritos.'                              // [NEW]
+      started: 'Empieza el juego. Dispara a los meteoritos.',                             // [NEW]
+      startedSurvival: 'Lluvia de meteoritos. No dejes que lleguen abajo.'                 // [NEW]
     }
   },
 
@@ -101,33 +121,48 @@ CB.strings = {
       soundOff: 'Sound off'                            // [NEW] live-region text
     },
     title: {
-      toStart: 'to start'                              // [FL]
+      toStart: 'to start',                             // [FL]
+      extraMode: 'Extra mode',                         // [NEW]
+      survival: 'Meteor shower'                        // [NEW]
     },
     instructions: {
       title: 'Instructions',                           // [FL]
       goal: 'Fill the cosmic bar to win',              // [F]
+      goalSurvival: 'Survive the meteor shower as long as you can',   // [NEW]
       next: 'to continue',                             // [NEW] the original advanced on tap
       rowMeteorite: 'Meteorite: shoot it and you earn 50 points.',    // [NEW] screen-reader text of row 1
       rowTrap: 'Yellow tank: shoot it and you lose 50 points.',       // [NEW] screen-reader text of row 2
-      rowStar: 'Star: shoot it and you earn extra time.'              // [NEW] screen-reader text of row 3
+      rowStar: 'Star: shoot it and you earn extra time.',             // [NEW] screen-reader text of row 3
+      rowStarSurvival: 'Star: shoot it and you get a life back.',     // [NEW]
+      rowGround: 'If a meteorite reaches the ground you lose a life. You have three.'   // [NEW]
     },
     controls: {
       title: 'Controls',                               // [FL]
       aim: 'aim',                                      // [F]
       shoot: 'shoot',                                  // [F]
+      mouse: 'Mouse',                                  // [NEW]
+      keyboard: 'Keyboard',                            // [NEW]
+      phone: 'Phone',                                  // [NEW]
       mouseAim: 'Move the mouse',                      // [NEW] desktop controls
       mouseShoot: 'Left click',                        // [NEW] desktop controls
+      phoneAim: 'Tilt it',                             // [NEW] like the original
+      phoneShoot: 'Tap the screen',                    // [NEW] like the original
       or: 'or',                                        // [NEW]
       keySpace: 'Space',                               // [NEW] key cap label
-      keysAim: 'or the arrow keys, or W, A, S and D',                 // [NEW] screen-reader text
-      keysShoot: 'or the space bar, or Enter',                        // [NEW] screen-reader text
-      pauseHow: 'P or Esc to pause',                   // [NEW] desktop controls
-      langHow: 'L changes the language',               // [NEW]
-      soundHow: 'M mutes the sound',                   // [NEW]
-      phoneHint: 'On a phone: tilt it to aim and tap the screen to shoot.'                   // [NEW] like the original
+      keysAim: 'arrow keys, or W, A, S and D',         // [NEW] screen-reader text
+      keysShoot: 'space bar, or Enter',                // [NEW] screen-reader text
+      shortcuts: 'Shortcuts',                          // [NEW]
+      pause: 'Pause',                                  // [NEW]
+      language: 'Language',                            // [NEW]
+      sound: 'Sound'                                   // [NEW]
     },
     hud: {
       level: 'Level',                                  // [FL]
+      wave: 'Wave',                                    // [NEW]
+      lives: 'Lives: {n}',                             // [NEW]
+      lifeLost: 'A meteorite landed. Lives: {n}',      // [NEW]
+      lifeBack: 'Life back. Lives: {n}',               // [NEW]
+      waveUp: 'Wave {n}. Faster.',                     // [NEW]
       points: 'pts',                                   // [F]
       barLabel: 'Cosmic bar: progress toward the level target',    // [NEW] screen-reader name of the bar
       scored: 'Score: {score}',                        // [NEW] live-region text after a hit
@@ -139,14 +174,18 @@ CB.strings = {
     gameOver: {
       title: 'Game Over',                              // [F]
       restartQuestion: 'Restart?',                     // [FL]
-      toRestart: 'to restart'                          // [FL]
+      toRestart: 'to restart',                         // [FL]
+      score: 'Score: {score}',                         // [NEW]
+      best: 'Best: {best}',                            // [NEW]
+      newBest: 'New record!'                           // [NEW]
     },
     win: {
       headingLine1: 'Now for real...',                 // [FL]
       headingLine2: 'Heading to Earth',                // [FL]
       home: 'You made it home',                        // [FL]
       playAgain: 'Play again?',                        // [FL]
-      toRestart: 'to restart'                          // [FL]
+      toRestart: 'to restart',                         // [FL]
+      trySurvival: 'Or try the meteor shower'          // [NEW]
     },
     story: {
       alarm: 'Oh no, meteors are coming!',                                  // [F]
@@ -167,7 +206,8 @@ CB.strings = {
     game: {
       areaLabel: 'Game area',                                                             // [NEW]
       help: 'Move the mouse or the arrow keys to aim. Click, Space or Enter to shoot.',    // [NEW]
-      started: 'Game on. Shoot the meteorites.'                                           // [NEW]
+      started: 'Game on. Shoot the meteorites.',                                          // [NEW]
+      startedSurvival: 'Meteor shower. Do not let them reach the ground.'                  // [NEW]
     }
   }
 };

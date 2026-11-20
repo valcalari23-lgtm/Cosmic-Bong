@@ -28,7 +28,7 @@ window.CB = window.CB || {};
     CB.stage.onFrame(function () {
       box.textContent =
         'fps    ' + Math.round(CB.stage.getFps()) + '\n' +
-        'screen ' + CB.state.screen + '  state ' + CB.game.getState() + '\n' +
+        'screen ' + CB.state.screen + '  state ' + CB.game.getState() + '  mode ' + CB.game.getMode() + '\n' +
         'lang   ' + CB.state.lang + '\n' +
         'aim    ' + Math.round(CB.input.aim.x) + ', ' + Math.round(CB.input.aim.y) + (CB.input.isTilting() ? '  (tilt)' : '') + '\n' +
         'rocks  ' + CB.game.count() + '\n' +
@@ -37,6 +37,7 @@ window.CB = window.CB || {};
         'missing assets ' + CB.assets.missing.length + '\n' +
         'music  ' + (CB.audio.current() || '-') + (CB.audio.isMuted() ? '  (muted)' : '') + '\n' +
         (CB.game.getBoss() ? 'boss   ' + CB.game.getBoss().lives + ' lives\n' : '') +
+        (CB.game.getMode() === 'survival' ? 'lives  ' + CB.game.getLives() + '  wave ' + CB.game.getWave() + '\n' : '') +
         'N: skip level';
     });
     document.addEventListener('keydown', function (event) {
@@ -64,11 +65,17 @@ window.CB = window.CB || {};
       if (isSoundKey(event)) { CB.audio.toggle(); }
     });
 
-    /* Flow: title -> instructions -> controls -> game (question 11: screens as in Figma). */
-    document.getElementById('btn-start').addEventListener('click', function () {
-      CB.screens.show('instructions');
-      CB.screens.announce(CB.t('instructions.title'));
-    });
+    /* Flow: title -> instructions -> controls -> game (question 11: screens as in Figma).
+       The title offers two modes (stage 10); both go through the same instructions and controls. */
+    function toInstructions(mode) {
+      return function () {
+        CB.game.setMode(mode);
+        CB.screens.show('instructions');
+        CB.screens.announce(CB.t('instructions.title') + (mode === 'survival' ? '. ' + CB.t('title.survival') : ''));
+      };
+    }
+    document.getElementById('btn-start').addEventListener('click', toInstructions('mission'));
+    document.getElementById('btn-survival').addEventListener('click', toInstructions('survival'));
     document.getElementById('btn-instructions-next').addEventListener('click', function () {
       CB.screens.show('controls');
       CB.screens.announce(CB.t('controls.title'));
@@ -81,9 +88,11 @@ window.CB = window.CB || {};
     if ('ontouchstart' in window || (navigator.maxTouchPoints || 0) > 0) {
       document.documentElement.classList.add('is-touch');
     }
-    /* Restarting after Game Over or a win goes straight back into the game. */
+    /* Restarting after Game Over or a win goes straight back into the game (same mode).
+       The last win screen also offers the meteor shower. */
     document.getElementById('btn-restart').addEventListener('click', CB.game.start);
-    document.getElementById('btn-play-again').addEventListener('click', CB.game.start);
+    document.getElementById('btn-play-again').addEventListener('click', function () { CB.game.setMode('mission'); CB.game.start(); });
+    document.getElementById('btn-win-survival').addEventListener('click', CB.game.startSurvival);
     document.getElementById('btn-resume').addEventListener('click', CB.game.resume);
 
     CB.assets.load(function () {

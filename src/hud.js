@@ -74,19 +74,38 @@ CB.hud = (function () {
     bar.setAttribute('aria-valuemax', String(max));
   }
 
-  /* Boss lives: a row of pips under the level label. null hides it (levels 1-3). */
-  function setBossLives(livesLeft, total) {
-    var box = document.getElementById('hud-boss');
-    if (livesLeft === null) {
+  /* A row of indicators: the first `on` of `total` are lit. null hides the row. */
+  function setRow(id, on, total, onClass, offClass, label, glyph) {
+    var box = document.getElementById(id);
+    if (on === null) {
       box.hidden = true;
       return;
     }
     box.hidden = false;
-    while (box.children.length < total) { box.appendChild(document.createElement('i')); }
-    for (var i = 0; i < box.children.length; i++) {
-      box.children[i].className = i < livesLeft ? 'pip pip-on' : 'pip';
+    while (box.children.length < total) {
+      var i = document.createElement('i');
+      if (glyph) { i.textContent = glyph; }
+      box.appendChild(i);
     }
-    box.setAttribute('aria-label', CB.t('boss.lives').replace('{n}', livesLeft));
+    for (var k = 0; k < box.children.length; k++) {
+      box.children[k].className = k < on ? onClass : offClass;
+    }
+    box.setAttribute('aria-label', label);
+  }
+
+  /* Boss lives: ten pips under the level label (level 4). null hides it (levels 1-3). */
+  function setBossLives(livesLeft, total) {
+    setRow('hud-boss', livesLeft, total, 'pip pip-on', 'pip', livesLeft === null ? '' : CB.t('boss.lives').replace('{n}', livesLeft));
+  }
+
+  /* Player lives (meteor shower mode): hearts under the bar. null hides them (mission). */
+  function setLives(livesLeft, total) {
+    setRow('hud-lives', livesLeft, total, 'life life-on', 'life', livesLeft === null ? '' : CB.t('hud.lives').replace('{n}', livesLeft), '\u2665');
+  }
+
+  /* The clock only belongs to the mission (the meteor shower has no timer). */
+  function showTimer(on) {
+    timeBox.hidden = !on;
   }
 
   /* Floating label at stage coordinates (x, y). kind: 'good' (green) or 'bad' (red).
@@ -123,6 +142,8 @@ CB.hud = (function () {
     update: update,
     setBar: setBar,
     setBossLives: setBossLives,
+    setLives: setLives,
+    showTimer: showTimer,
     updateTime: updateTime,
     popup: popup,
     clearPopups: clearPopups,

@@ -110,6 +110,17 @@ Todo esto es **[Adaptación]**: decisiones nuevas, propuestas para que Valeria l
 - La maqueta original no tiene pausa. Se agrega por accesibilidad.
 - Las medidas en pixeles que vienen del código (1280 × 720) se multiplican por 1.5 para el escenario de 1920 × 1080.
 
+## 5b. Modo extra: Lluvia de meteoritos (no estaba en el original)
+
+Añadido el 20 de noviembre de 2026 a pedido de Valeria, para que haya dos formas de jugar con los mismos personajes. Reglas en `CB.config.survival` (ADAPTATION):
+
+- Sin reloj. Tres vidas, mostradas como corazones donde va el reloj en la misión.
+- Los meteoritos entran por arriba y caen casi en vertical. Uno que llega abajo (`groundY`) resta una vida.
+- Mismos puntos que la misión (+50 meteorito, −50 tanque). La estrella devuelve una vida, o da 100 puntos si ya hay tres.
+- Cada diez meteoritos sube la oleada: velocidad ×1.12 e intervalos ×0.92 (mínimo 0.5 s entre meteoritos). La barra cósmica cuenta los meteoritos de la oleada.
+- Game Over muestra los puntos y el récord del navegador (`localStorage`).
+- Se entra desde la portada ("Modo extra") o desde la última pantalla de victoria.
+
 ## 6. Estilo visual
 
 ### Colores [Figma] (muestreados de las exportaciones)
