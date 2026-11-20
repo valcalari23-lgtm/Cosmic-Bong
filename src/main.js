@@ -81,7 +81,11 @@ window.CB = window.CB || {};
       CB.screens.show('controls');
       CB.screens.announce(CB.t('controls.title'));
     });
-    document.getElementById('btn-controls-start').addEventListener('click', function () {
+    document.getElementById('btn-controls-next').addEventListener('click', function () {
+      CB.screens.show('ready');
+      CB.screens.announce(CB.t('ready.title') + '. ' + CB.t('common.press') + ' ' + CB.t('title.toStart'));
+    });
+    document.getElementById('btn-ready-start').addEventListener('click', function () {
       CB.input.requestTilt();      // iOS asks for gyroscope permission here, inside the tap
       CB.game.start();
     });

@@ -156,10 +156,9 @@
           <p class="body-text mission-only" data-i18n="instructions.goal"></p>
           <p class="body-text survival-only" data-i18n="instructions.goalSurvival"></p>
           <p class="body-text run-only" data-i18n="instructions.goalRun"></p>
-          <button id="btn-instructions-next" class="press press-small" type="button">
-            <span data-i18n="common.press"></span>
-            <img src="assets/ui/icon-tap.png" alt="" width="114" height="114">
-            <span data-i18n="instructions.next"></span>
+          <!-- Next: a round arrow on the right edge (Valeria, 2026-11-20). -->
+          <button id="btn-instructions-next" class="panel-next" type="button" data-i18n-aria="common.next">
+            <svg viewBox="0 0 48 48" width="48" height="48" aria-hidden="true" focusable="false"><path d="M8 24h30M26 12l12 12-12 12" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
         </div>
       </section>
@@ -220,7 +219,17 @@
               </ul>
             </section>
           </div>
-          <button id="btn-controls-start" class="press press-small" type="button">
+          <button id="btn-controls-next" class="panel-next" type="button" data-i18n-aria="common.next">
+            <svg viewBox="0 0 48 48" width="48" height="48" aria-hidden="true" focusable="false"><path d="M8 24h30M26 12l12 12-12 12" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Ready: the panel with only "Press to start", centred (Valeria's frame, 2026-11-20). -->
+      <section id="screen-ready" class="screen" data-screen="ready" aria-labelledby="ready-heading" hidden>
+        <div class="panel panel-ready">
+          <h2 id="ready-heading" class="sr-only" data-i18n="ready.title"></h2>
+          <button id="btn-ready-start" class="press press-ready" type="button">
             <span data-i18n="common.press"></span>
             <img src="assets/ui/icon-tap.png" alt="" width="114" height="114">
             <span data-i18n="title.toStart"></span>

@@ -73,7 +73,7 @@ CB.screens = (function () {
         target.focus({ preventScroll: true });
       } else {
         var first = target.querySelector('button');
-        if (first) { first.focus(); }
+        if (first) { first.focus({ preventScroll: true }); }   // never scroll the scaled stage
       }
     }
   }

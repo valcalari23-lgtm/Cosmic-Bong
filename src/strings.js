@@ -19,7 +19,8 @@ CB.strings = {
       soundUnmute: 'Activar el sonido. Atajo: tecla M.',   // [NEW] sound button label while muted
       soundOn: 'Sonido activado',                      // [NEW] live-region text
       soundOff: 'Sonido silenciado',                   // [NEW] live-region text
-      home: 'Volver al inicio'                         // [NEW] exit button on Game Over and the last win screen
+      home: 'Volver al inicio',                        // [NEW] exit button on Game Over and the last win screen
+      next: 'Siguiente'                                // [NEW] arrow button on Instructions and Controls
     },
     title: {
       toStart: 'para iniciar',                         // [F]
@@ -103,6 +104,9 @@ CB.strings = {
       alarm: '¡Oh no, vienen meteoritos!',                                        // [NEW] original bubble is in English
       mission: '¡Recuperemos los tanques, pero cuidado con los meteoritos!'       // [NEW] original bubble is in English
     },
+    ready: {
+      title: 'Todo listo'                              // [NEW] screen-reader heading of the "press to start" panel
+    },
     pause: {
       title: 'Pausa',                                  // [NEW]
       hint: 'P o Esc para continuar',                  // [NEW]
@@ -134,7 +138,8 @@ CB.strings = {
       soundUnmute: 'Turn the sound on. Shortcut: M key.',  // [NEW] sound button label while muted
       soundOn: 'Sound on',                             // [NEW] live-region text
       soundOff: 'Sound off',                           // [NEW] live-region text
-      home: 'Back to start'                            // [NEW]
+      home: 'Back to start',                           // [NEW]
+      next: 'Next'                                     // [NEW]
     },
     title: {
       toStart: 'to start',                             // [FL]
@@ -217,6 +222,9 @@ CB.strings = {
     story: {
       alarm: 'Oh no, meteors are coming!',                                  // [F]
       mission: "Let's recover the tanks, but watch out for the meteors!"    // [F]
+    },
+    ready: {
+      title: 'All set'                                 // [NEW]
     },
     pause: {
       title: 'Paused',                                 // [NEW]

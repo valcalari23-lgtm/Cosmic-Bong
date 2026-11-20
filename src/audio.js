@@ -36,7 +36,7 @@ CB.audio = (function () {
   var sfxFiles = {};       // effect name -> HTMLAudioElement that finished loading (cloned to play)
   var button = null;
 
-  var MENU_SCREENS = { title: true, instructions: true, controls: true };
+  var MENU_SCREENS = { title: true, instructions: true, controls: true, ready: true };
   var LOOKAHEAD_S = 0.25;
   var TICK_MS = 50;
 

@@ -711,7 +711,7 @@ html, body {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
 }
-.panel-instructions { padding-bottom: 150px; }   /* room for the bottom-right button */
+.panel-instructions { padding-bottom: 60px; padding-right: 180px; }   /* room for the next arrow */
 .deco-panel-meteorite-top { left: 345px; top: 40px; width: 110px; }
 .deco-panel-meteorite-right { left: 1680px; top: 290px; width: 90px; transform: scaleX(-1) rotate(-10deg); }
 
@@ -805,8 +805,8 @@ html, body {
 .panel-controls {
   align-items: flex-start;
   text-align: left;
-  gap: 10px;
-  padding: 44px 110px 40px 250px;
+  gap: 14px;
+  padding: 56px 170px 40px 250px;
 }
 .panel-controls .screen-title { align-self: flex-start; }
 .controls-columns {
@@ -827,12 +827,12 @@ html, body {
   position: relative;
   width: 100%;
   max-width: 560px;
-  height: 320px;
+  height: 370px;
   font-size: 24px;
 }
 .control-title {
   align-self: center;
-  margin: -4px 0 8px;
+  margin: -6px 0 14px;
   font-family: var(--font-body);
   font-size: 48px;
   font-weight: 600;
@@ -908,18 +908,31 @@ kbd {
 #stage.mode-run .control-aim .slot-control { max-width: 640px; height: 460px; }
 #stage.mode-run .control-title { align-self: flex-start; margin: 0 0 10px; }
 #stage.mode-run .shortcuts { margin-top: 16px; }
-/* The "next" button sits bottom-right on both panels. */
-.panel-controls .press,
-.panel-instructions .press {
+/* Next arrow (Valeria, 2026-11-20): a round button on the right edge of the panel, mid-height. */
+.panel-next {
   position: absolute;
-  right: 60px;
-  bottom: 22px;
-  margin: 0;
-  align-self: auto;
-  font-size: 50px;
+  right: 44px;
+  top: 50%;
+  width: 96px;
+  height: 96px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 3px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  cursor: pointer;
 }
-.panel-controls .press img,
-.panel-instructions .press img { width: 90px; height: 90px; }
+.panel-next:hover { background: rgba(255, 255, 255, 0.18); }
+.panel-next svg { width: 52px; height: 52px; }
+
+/* Ready panel: only the big "Press to start", centred (Valeria's frame). */
+.panel-ready { justify-content: center; align-items: center; padding: 0 120px 0 240px; }
+.press-ready { font-size: 84px; gap: 34px; }
+.press-ready img { width: 170px; height: 170px; }
 .control-extra {
   margin: 0;
   font-size: 30px;
