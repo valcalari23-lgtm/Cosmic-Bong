@@ -121,6 +121,15 @@ Añadido el 20 de noviembre de 2026 a pedido de Valeria, para que haya dos forma
 - Game Over muestra los puntos y el récord del navegador (`localStorage`).
 - Se entra desde la portada ("Modo extra") o desde la última pantalla de victoria.
 
+## 5c. Modo extra: Carrera espacial (no estaba en el original)
+
+Añadido el 20 de noviembre de 2026: Valeria quería un juego de otro género con los mismos personajes (algo "tipo Mario Kart", distinto a apuntar y disparar). Reglas en `CB.config.run` (ADAPTATION):
+
+- No se dispara. El héroe (de espaldas) se mueve a izquierda y derecha por el borde inferior: mouse, flechas o A/D, o inclinando el celular. Sigue al puntero con suavizado (`heroFollow`).
+- Todo cae desde arriba, casi en vertical. Meteorito que toca al héroe: una vida menos (tres vidas), y un instante invulnerable con parpadeo (`invulnerableMs`). Tanque: se recoge (+100) y se cuenta en el HUD. Estrella: una vida, o +200 con las tres.
+- +10 puntos por segundo. La velocidad sube un 60 % por minuto (tope ×2.6) y los intervalos bajan hasta el 40 %.
+- Game Over con puntos y récord propio (`localStorage`). Sin barra cósmica ni reloj.
+
 ## 6. Estilo visual
 
 ### Colores [Figma] (muestreados de las exportaciones)

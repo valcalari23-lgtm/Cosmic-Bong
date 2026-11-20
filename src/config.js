@@ -209,6 +209,32 @@ CB.config = {
     bestKey: 'cosmic-boing-best'   // localStorage key of the best score
   },
 
+  /* ADAPTATION (stage 11, 2026-11-20): third game mode, "Space run" (Carrera espacial). No shooting:
+     the hero moves left and right along the bottom (mouse, arrows / A D, or tilting the phone) while
+     everything falls from the top. Meteorites cost a life, tanks are collected (the story's
+     "let's recover the tanks"), stars give a life back. Gets faster the longer you last. */
+  run: {
+    lives: 3,
+    speedPxPerSec: 330,            // falling speed at the start
+    speedGrowthPerMin: 0.6,        // +60% per minute survived
+    maxSpeedFactor: 2.6,
+    meteoriteEveryMs: 1300,
+    tankEveryMs: 2600,
+    starEveryMs: 14000,
+    intervalFloorFactor: 0.4,      // intervals shrink toward this fraction...
+    intervalShrinkPerMin: 0.45,    // ...by this much per minute
+    fallAngleSpreadDeg: 10,
+    heroFollow: 12,                // how fast the hero catches up with the pointer (per second)
+    heroMinX: 200, heroMaxX: 1720,
+    hitRadiusPx: 125,              // hero body radius for collisions, measured from its chest
+    heroCenterYOffset: 190,        // chest height above the stage bottom
+    invulnerableMs: 1500,          // after a hit: blinking, cannot be hit again
+    tankPoints: 100,
+    starPoints: 200,               // when lives are already full
+    pointsPerSecond: 10,
+    bestKey: 'cosmic-boing-best-run'
+  },
+
   /* Only active with index.html?debug=1 */
   debug: {
     enabled: /[?&]debug=1/.test(window.location.search),

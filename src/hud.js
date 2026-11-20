@@ -103,9 +103,14 @@ CB.hud = (function () {
     setRow('hud-lives', livesLeft, total, 'life life-on', 'life', livesLeft === null ? '' : CB.t('hud.lives').replace('{n}', livesLeft), '\u2665');
   }
 
-  /* The clock only belongs to the mission (the meteor shower has no timer). */
+  /* The clock only belongs to the mission (the other modes have no timer). */
   function showTimer(on) {
     timeBox.hidden = !on;
+  }
+
+  /* The cosmic bar has no meaning in the space run. */
+  function showBar(on) {
+    bar.hidden = !on;
   }
 
   /* Floating label at stage coordinates (x, y). kind: 'good' (green) or 'bad' (red).
@@ -144,6 +149,7 @@ CB.hud = (function () {
     setBossLives: setBossLives,
     setLives: setLives,
     showTimer: showTimer,
+    showBar: showBar,
     updateTime: updateTime,
     popup: popup,
     clearPopups: clearPopups,

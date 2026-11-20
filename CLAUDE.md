@@ -80,7 +80,7 @@ src/game.js           máquina de estados y reglas
 src/main.js           arranque
 ```
 
-Todas las etapas del plan están construidas (0 a 10). Hay dos modos: `mission` (el juego original, niveles 1-4) y `survival` ("Lluvia de meteoritos", `CB.config.survival`); `CB.game.setMode()` pone la clase `mode-survival` en `#stage`, que cambia los textos marcados `.mission-only` / `.survival-only`. El orden de carga de los scripts está en `index.html`; `audio.js` va después de `screens.js` y antes de `game.js`.
+Todas las etapas del plan están construidas (0 a 10). Hay tres modos: `mission` (el juego original, niveles 1-4), `survival` ("Lluvia de meteoritos", `CB.config.survival`) y `run` ("Carrera espacial", `CB.config.run`, sin disparos); `CB.game.setMode()` pone `mode-survival` o `mode-run` en `#stage`, que cambia los textos marcados `.mission-only` / `.survival-only` / `.run-only` / `.run-hide`. `CB.game.exit()` vuelve a la portada desde la pausa, Game Over o la victoria. El orden de carga de los scripts está en `index.html`; `audio.js` va después de `screens.js` y antes de `game.js`.
 
 ## Datos para el portafolio
 

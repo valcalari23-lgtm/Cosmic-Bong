@@ -39,7 +39,7 @@ CB.entities = (function () {
     var x = margin.left + Math.random() * (W - margin.left - margin.right);
     var y, angle, lifetime;
     if (opts.fromTop) {
-      var spread = (CB.config.survival.fallAngleSpreadDeg || 0) * Math.PI / 180;
+      var spread = (typeof opts.spreadDeg === 'number' ? opts.spreadDeg : CB.config.survival.fallAngleSpreadDeg || 0) * Math.PI / 180;
       angle = Math.PI / 2 + (Math.random() * 2 - 1) * spread;
       y = -cfg[kind].size / 2;
       lifetime = 60;
@@ -186,16 +186,29 @@ CB.entities = (function () {
 
   /* ---------- Hero (static, drawn each frame) ---------- */
 
-  function drawHero(ctx) {
+  /* centerX defaults to the fixed position of the mission; the space run moves the hero.
+     alpha < 1 draws the hero faded (blinking after a hit). */
+  function drawHero(ctx, centerX, alpha) {
     var img = CB.assets.get('heroBack');
     var h = cfg.hero;
-    var x = h.centerX - h.width / 2;
+    var cx = typeof centerX === 'number' ? centerX : h.centerX;
+    var x = cx - h.width / 2;
     var y = H - h.height + h.bottomOverflow;
+    if (typeof alpha === 'number' && alpha < 1) { ctx.save(); ctx.globalAlpha = Math.max(0, alpha); }
     if (img && img.complete && img.naturalWidth) {
       ctx.drawImage(img, x, y, h.width, h.height);
     } else {
       placeholder(ctx, x, y, h.width, h.height, 'hero-back');
     }
+    if (typeof alpha === 'number' && alpha < 1) { ctx.restore(); }
+  }
+
+  /* Space run: does the object's body touch the hero standing at heroX? */
+  function touchesHero(o, heroX) {
+    var r = CB.config.run.hitRadiusPx;
+    var dx = o.x - heroX;
+    var dy = o.y - (H - CB.config.run.heroCenterYOffset);
+    return dx * dx + dy * dy < r * r;
   }
 
   /* ---------- Crosshair and aim line ---------- */
@@ -255,6 +268,7 @@ CB.entities = (function () {
     updateExplosion: updateExplosion,
     drawExplosion: drawExplosion,
     drawHero: drawHero,
+    touchesHero: touchesHero,
     drawAimLine: drawAimLine,
     drawCrosshair: drawCrosshair
   };

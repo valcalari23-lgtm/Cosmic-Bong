@@ -12,7 +12,7 @@ Código: https://github.com/valcalari23-lgtm/Cosmic-Bong
 
 Doble clic en `index.html`. Se abre en tu navegador. No hay que instalar nada.
 
-El juego completo está construido (etapas 0 a 10 de `docs/02-plan-por-etapas.md`): la misión de cuatro niveles con jefe, Game Over y victoria; un modo extra "Lluvia de meteoritos" (sin tiempo, tres vidas, oleadas cada vez más rápidas y récord); instrucciones y controles; música y efectos; en español e inglés y jugable con mouse, solo teclado o inclinando el celular. La tecla M o el botón del altavoz silencian el sonido. La música y los efectos son de dominio público (CC0): FreePD y la colección retro de Juhani Junkala, ver `assets/audio/CREDITOS.md`.
+El juego completo está construido (etapas 0 a 10 de `docs/02-plan-por-etapas.md`): la misión de cuatro niveles con jefe, Game Over y victoria; dos modos extra: "Lluvia de meteoritos" (sin tiempo, tres vidas, oleadas cada vez más rápidas y récord) y "Carrera espacial" (sin disparos: mover al héroe para esquivar meteoritos y recoger tanques); instrucciones y controles; música y efectos; en español e inglés y jugable con mouse, solo teclado o inclinando el celular. La tecla M o el botón del altavoz silencian el sonido. La música y los efectos son de dominio público (CC0): FreePD y la colección retro de Juhani Junkala, ver `assets/audio/CREDITOS.md`.
 
 ## Empezar con Claude Code
 

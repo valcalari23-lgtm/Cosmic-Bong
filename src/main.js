@@ -37,7 +37,7 @@ window.CB = window.CB || {};
         'missing assets ' + CB.assets.missing.length + '\n' +
         'music  ' + (CB.audio.current() || '-') + (CB.audio.isMuted() ? '  (muted)' : '') + '\n' +
         (CB.game.getBoss() ? 'boss   ' + CB.game.getBoss().lives + ' lives\n' : '') +
-        (CB.game.getMode() === 'survival' ? 'lives  ' + CB.game.getLives() + '  wave ' + CB.game.getWave() + '\n' : '') +
+        (CB.game.getMode() !== 'mission' ? 'lives  ' + CB.game.getLives() + '  wave ' + CB.game.getWave() + '  tanks ' + CB.game.getTanks() + '  heroX ' + Math.round(CB.game.getHeroX()) + '\n' : '') +
         'N: skip level';
     });
     document.addEventListener('keydown', function (event) {
@@ -76,6 +76,7 @@ window.CB = window.CB || {};
     }
     document.getElementById('btn-start').addEventListener('click', toInstructions('mission'));
     document.getElementById('btn-survival').addEventListener('click', toInstructions('survival'));
+    document.getElementById('btn-run').addEventListener('click', toInstructions('run'));
     document.getElementById('btn-instructions-next').addEventListener('click', function () {
       CB.screens.show('controls');
       CB.screens.announce(CB.t('controls.title'));
@@ -92,7 +93,10 @@ window.CB = window.CB || {};
        The last win screen also offers the meteor shower. */
     document.getElementById('btn-restart').addEventListener('click', CB.game.start);
     document.getElementById('btn-play-again').addEventListener('click', function () { CB.game.setMode('mission'); CB.game.start(); });
-    document.getElementById('btn-win-survival').addEventListener('click', CB.game.startSurvival);
+    /* Exit (Valeria, 2026-11-20): from the pause dialog, Game Over or the last win screen, back to the start. */
+    document.getElementById('btn-exit').addEventListener('click', CB.game.exit);
+    document.getElementById('btn-home-gameover').addEventListener('click', CB.game.exit);
+    document.getElementById('btn-home-win').addEventListener('click', CB.game.exit);
     document.getElementById('btn-resume').addEventListener('click', CB.game.resume);
 
     CB.assets.load(function () {

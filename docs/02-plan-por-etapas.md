@@ -87,6 +87,19 @@ Las reglas y los datos por confirmar están en `01-diseno-del-juego.md`.
 - Subir a GitHub Pages o similar para enlazarlo desde el portafolio.
 - Control por giroscopio en celular como modo extra, fiel al original.
 
+## Etapa 11: tercer modo, pantallas con aire y salida al inicio (20 de noviembre de 2026)
+
+Pedido de Valeria tras probar la etapa 10: las pantallas seguían recargadas (textos grandes y pegados), faltaba una forma de salir del juego al inicio, el personaje de la última pantalla quedaba tapado por los botones, y el modo "Lluvia" se parecía demasiado al juego original: quería algo de otro género con los mismos personajes.
+
+- **Instrucciones:** todo alineado a la izquierda en una columna, dibujos a 88 px, resultado a 50 px, flechas cortas, y cada fila termina con la regla escrita (27 px). Una lista por modo. Títulos de panel a 52 px.
+- **Salir:** botón "Salir al inicio" en el cuadro de pausa (Tab recorre Continuar y Salir), y "Volver al inicio" en Game Over y en la última pantalla de victoria. Todos llevan a la portada.
+- **Victoria 2:** el personaje pasa al lado izquierdo y el título baja a 104 px, para que la placa de botones no lo tape.
+- **Modo "Carrera espacial"** (`CB.config.run`): sin disparos. El héroe se mueve de lado a lado abajo (mouse, flechas o A/D, inclinar el celular) mientras todo cae. Meteorito que lo toca: una vida menos y un instante de parpadeo invulnerable. Tanque: se recoge, +100 y cuenta en el HUD ("Tanques 03", la historia dice "recuperemos los tanques"). Estrella: una vida (o +200 con las tres). +10 puntos por segundo. Velocidad e intervalos aprietan con el tiempo. Game Over con puntos y récord propio.
+- Portada: fila "Modos extra" con los dos botones (Lluvia de meteoritos, Carrera espacial) bajo el botón principal.
+- Pantalla de Controles en la carrera: la columna "apuntar" pasa a "mover" (mouse de lado a lado, ← → o A D) y la de "disparar" se oculta.
+
+**Probar:** portada → "Carrera espacial" → instrucciones de tres filas → controles con una sola columna → mover al héroe con el mouse, las flechas o inclinando el celular. Esc → "Salir al inicio" vuelve a la portada. Ganar la misión: el personaje de la última pantalla se ve completo, a la izquierda.
+
 ## Etapa 10: segundo modo, controles ordenados y más dificultad (20 de noviembre de 2026)
 
 Pedido de Valeria tras jugar la versión publicada: la pantalla de Controles se leía amontonada, los niveles seguían fáciles y quería "otro juego" con los mismos personajes.

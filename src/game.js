@@ -3,10 +3,12 @@
    Stage 3: trap tanks (-50), stars (extra time) and the 60 s level timer.
    Stage 4: levels 1-3 with a target score, Game Over when time runs out, pause.
    Stage 5: level 4 is the boss (10 lives); the tenth hit wins the game.
-   Stage 10: a second mode, 'survival' ("Meteor shower"): endless, meteorites fall from the top,
+   Stage 10: second mode, 'survival' ("Meteor shower"): endless, meteorites fall from the top,
    one that reaches the ground costs a life (3), every ten meteorites the wave speeds up.
+   Stage 11: third mode, 'run' ("Space run"): no shooting. The hero moves left and right along
+   the bottom; meteorites that touch it cost a life, tanks are collected, stars give a life back.
 
-   Modes: 'mission' (the original game, levels 1-4) and 'survival'.
+   Modes: 'mission' (the original game, levels 1-4), 'survival', 'run'.
    States: 'idle' (not playing), 'playing', 'transition' (level banner),
    'paused', 'over' (Game Over screen showing), 'won' (win screens showing).
 
@@ -34,18 +36,24 @@ CB.game = (function () {
   var transitionLeft = 0;        // seconds the level banner stays (play paused meanwhile)
   var endTimer = null;
   var boss = null;               // the boss object while in level 4
-  /* survival */
+  /* survival and run */
   var lives = 0;
   var wave = 1;
   var spawnedInWave = 0;
   var bannerLeft = 0;            // seconds the wave banner stays (play continues)
+  /* run */
+  var heroX = cfg.entities.hero.centerX;
+  var tanks = 0;
+  var elapsed = 0;               // seconds survived
+  var invulnerable = 0;          // seconds left of blinking after a hit
+  var pointsCarry = 0;           // fractional points per second
 
-  function isSurvival() {
-    return mode === 'survival';
-  }
+  function isSurvival() { return mode === 'survival'; }
+  function isRun() { return mode === 'run'; }
+  function isMission() { return mode === 'mission'; }
 
   function isBossLevel() {
-    return !isSurvival() && level === cfg.boss.level;
+    return isMission() && level === cfg.boss.level;
   }
 
   function twoDigits(n) {
@@ -63,7 +71,7 @@ CB.game = (function () {
   /* ---------- pacing ---------- */
 
   /* Seconds between two objects of a kind. Mission: spawn.*EveryMs scaled per level (TUNED).
-     Survival: survival.*EveryMs scaled per wave, with a floor for meteorites. */
+     Survival: survival.*EveryMs scaled per wave. Run: run.*EveryMs shrinking with time survived. */
   function spawnEvery(kind) {
     if (isSurvival()) {
       var s = cfg.survival;
@@ -71,14 +79,20 @@ CB.game = (function () {
       if (kind === 'meteorite') { ms = Math.max(s.minMeteoriteEveryMs, ms); }
       return ms / 1000;
     }
+    if (isRun()) {
+      var r = cfg.run;
+      var base = kind === 'trap' ? r.tankEveryMs : r[kind + 'EveryMs'];
+      var factor = Math.max(r.intervalFloorFactor, 1 - (elapsed / 60) * r.intervalShrinkPerMin);
+      return base * factor / 1000;
+    }
     var scale = cfg.spawn.levelScale || [1];
-    var factor = scale[Math.min(level, scale.length) - 1];
-    return cfg.spawn[kind + 'EveryMs'] * factor / 1000;
+    var f = scale[Math.min(level, scale.length) - 1];
+    return cfg.spawn[kind + 'EveryMs'] * f / 1000;
   }
 
   /* Meteorites per spawn (mission only: spawn.burst per level). */
   function burstSize(kind) {
-    if (kind !== 'meteorite' || isSurvival()) { return 1; }
+    if (kind !== 'meteorite' || !isMission()) { return 1; }
     var b = cfg.spawn.burst || [1];
     return b[Math.min(level, b.length) - 1];
   }
@@ -87,24 +101,34 @@ CB.game = (function () {
     if (isSurvival()) {
       return cfg.survival.speedPxPerSec * Math.pow(cfg.survival.speedGrowthPerWave, wave - 1);
     }
+    if (isRun()) {
+      var factor = Math.min(cfg.run.maxSpeedFactor, 1 + (elapsed / 60) * cfg.run.speedGrowthPerMin);
+      return cfg.run.speedPxPerSec * factor;
+    }
     return CB.levels.speed(level);
   }
 
   /* ---------- score, time and lives ---------- */
 
+  function hudLabelNumber() {
+    if (isSurvival()) { return wave; }
+    if (isRun()) { return tanks; }
+    return level;
+  }
+
   /* VERIFIED: +50 per meteorite, -50 per trap (points.*). Score cannot go below zero
      (score.canGoBelowZero, PROVISIONAL, question 6). Reaching the level target
      ("fill the cosmic bar") clears the level (mission, levels 1-3). */
-  function addPoints(delta, x, y) {
+  function addPoints(delta, x, y, quiet) {
     score += delta;
     if (score < 0 && !cfg.score.canGoBelowZero) { score = 0; }
-    /* In the boss level and in survival the bar means something else, so only the numbers change. */
-    var target = (isBossLevel() || isSurvival()) ? null : CB.levels.target(level);
-    CB.hud.update(score, isSurvival() ? wave : level, target);
-    CB.hud.popup(x, y, (delta > 0 ? '+' : '−') + Math.abs(delta), delta > 0 ? 'good' : 'bad');
+    /* Outside levels 1-3 the bar means something else, so only the numbers change. */
+    var target = (isMission() && !isBossLevel()) ? CB.levels.target(level) : null;
+    CB.hud.update(score, hudLabelNumber(), target);
+    if (!quiet) { CB.hud.popup(x, y, (delta > 0 ? '+' : '−') + Math.abs(delta), delta > 0 ? 'good' : 'bad'); }
     if (target !== null && score >= target) {
       levelCleared();
-    } else {
+    } else if (!quiet) {
       CB.screens.announce(CB.t('hud.scored').replace('{score}', score));
     }
   }
@@ -131,30 +155,34 @@ CB.game = (function () {
     CB.screens.announce(CB.t('hud.timeAdded').replace('{s}', Math.round(ms / 1000)));
   }
 
-  /* Survival: a star gives a life back, or points when lives are full. */
+  function maxLives() {
+    return isRun() ? cfg.run.lives : cfg.survival.lives;
+  }
+
+  /* Survival and run: a star gives a life back, or points when lives are full. */
   function addLife(x, y) {
-    if (lives >= cfg.survival.lives) {
-      addPoints(cfg.survival.starPoints, x, y);
+    if (lives >= maxLives()) {
+      addPoints(isRun() ? cfg.run.starPoints : cfg.survival.starPoints, x, y);
       return;
     }
     lives += 1;
-    CB.hud.setLives(lives, cfg.survival.lives);
+    CB.hud.setLives(lives, maxLives());
     CB.hud.popup(x, y, '+1 ♥', 'good');
     CB.screens.announce(CB.t('hud.lifeBack').replace('{n}', lives));
   }
 
-  /* Survival: a meteorite reached the ground. */
-  function loseLife(o) {
-    explosions.push(CB.entities.spawnExplosion(o.x, Math.min(o.y, cfg.survival.groundY)));
+  /* One life less. x, y: where to show it. announceKey: hud.lifeLost or hud.hit. */
+  function loseLife(x, y, announceKey) {
+    explosions.push(CB.entities.spawnExplosion(x, y));
     lives -= 1;
-    CB.hud.setLives(lives, cfg.survival.lives);
-    CB.hud.popup(o.x, cfg.survival.groundY - 60, '−1 ♥', 'bad');
+    CB.hud.setLives(lives, maxLives());
+    CB.hud.popup(x, y - 60, '−1 ♥', 'bad');
     CB.audio.play('hitTrap');
     if (lives <= 0) {
       gameOver();
       return;
     }
-    CB.screens.announce(CB.t('hud.lifeLost').replace('{n}', lives));
+    CB.screens.announce(CB.t(announceKey).replace('{n}', lives));
   }
 
   function tickTimer(dt) {
@@ -173,7 +201,7 @@ CB.game = (function () {
     CB.hud.updateTime(timeLeft);
   }
 
-  /* ---------- levels (mission) and waves (survival) ---------- */
+  /* ---------- levels (mission), waves (survival), the run ---------- */
 
   function resetSpawnTimers() {
     for (var i = 0; i < KINDS.length; i++) {
@@ -207,6 +235,7 @@ CB.game = (function () {
       CB.hud.setBossLives(null);
     }
     CB.hud.setLives(null);
+    CB.hud.showBar(true);
     CB.hud.showTimer(true);
     CB.hud.updateTime(timeLeft);
     CB.audio.music(isBossLevel() ? 'boss' : 'play');   // levels 1-3 share one loop; the boss has its own
@@ -231,28 +260,46 @@ CB.game = (function () {
     beginLevel(true);
   }
 
-  /* Survival from wave 1: three lives, no clock, the bar counts meteorites toward the next wave. */
-  function beginSurvival() {
+  /* Shared start of the two endless modes. */
+  function beginEndless() {
     clearStage();
     score = 0;
-    lives = cfg.survival.lives;
+    lives = maxLives();
     wave = 1;
     spawnedInWave = 0;
     bannerLeft = 0;
     boss = null;
     timeLeft = 0;
     warned = false;
-    CB.hud.update(score, wave, null);
-    CB.hud.setBar(0, cfg.survival.perWave);
+    tanks = 0;
+    elapsed = 0;
+    invulnerable = 0;
+    pointsCarry = 0;
+    heroX = cfg.entities.hero.centerX;
     CB.hud.setBossLives(null);
-    CB.hud.setLives(lives, cfg.survival.lives);
+    CB.hud.setLives(lives, maxLives());
     CB.hud.showTimer(false);
     CB.hud.hideBanner();
     CB.audio.music('play');
     state = 'playing';
   }
 
-  /* Next wave: faster objects and shorter intervals; the banner shows while play goes on. */
+  /* Survival from wave 1: three lives, no clock, the bar counts meteorites toward the next wave. */
+  function beginSurvival() {
+    beginEndless();
+    CB.hud.update(score, wave, null);
+    CB.hud.showBar(true);
+    CB.hud.setBar(0, cfg.survival.perWave);
+  }
+
+  /* Run: three lives, no clock, no bar; the label counts recovered tanks. */
+  function beginRun() {
+    beginEndless();
+    CB.hud.update(score, tanks, null);
+    CB.hud.showBar(false);
+  }
+
+  /* Next wave (survival): faster objects and shorter intervals; the banner shows while play goes on. */
   function nextWave() {
     wave += 1;
     spawnedInWave = 0;
@@ -265,7 +312,7 @@ CB.game = (function () {
     CB.screens.announce(CB.t('hud.waveUp').replace('{n}', wave));
   }
 
-  /* ---------- win, game over and pause ---------- */
+  /* ---------- win, game over, pause and exit ---------- */
 
   /* VERIFIED sequence (Figma): "Now for real... heading to Earth", then "You made it home"
      with "Play again?". PROVISIONAL: the first screen lasts winFlow.headingMs. */
@@ -282,26 +329,32 @@ CB.game = (function () {
     }, cfg.winFlow.headingMs);
   }
 
+  function bestKey() {
+    return isRun() ? cfg.run.bestKey : cfg.survival.bestKey;
+  }
+
   function readBest() {
-    try { return parseInt(window.localStorage.getItem(cfg.survival.bestKey), 10) || 0; } catch (e) { return 0; }
+    try { return parseInt(window.localStorage.getItem(bestKey()), 10) || 0; } catch (e) { return 0; }
   }
 
   function storeBest(value) {
-    try { window.localStorage.setItem(cfg.survival.bestKey, String(value)); } catch (e) { /* private mode */ }
+    try { window.localStorage.setItem(bestKey(), String(value)); } catch (e) { /* private mode */ }
   }
 
   function gameOver() {
     stopPlay();
     state = 'over';
+    var scoreLine = document.getElementById('gameover-score');
     var extra = '';
-    if (isSurvival()) {
+    if (!isMission()) {
       var best = readBest();
       var isNew = score > best;
       if (isNew) { best = score; storeBest(best); }
       extra = CB.t('gameOver.score').replace('{score}', score) + ' · ' +
         (isNew ? CB.t('gameOver.newBest') : CB.t('gameOver.best').replace('{best}', best));
-      document.getElementById('gameover-score').textContent = extra;
     }
+    scoreLine.textContent = extra;
+    scoreLine.hidden = !extra;
     CB.screens.show('gameover');
     CB.audio.play('lose');
     CB.audio.music('over');
@@ -333,6 +386,14 @@ CB.game = (function () {
     else if (state === 'paused') { resume(); }
   }
 
+  /* Leaves whatever is going on and returns to the title screen (Valeria, 2026-11-20). */
+  function exit() {
+    stop();
+    CB.audio.duck(false);
+    CB.screens.show('title');
+    CB.screens.announce(CB.t('game.exited'));
+  }
+
   /* ---------- objects ---------- */
 
   function spawnAll(dt) {
@@ -346,7 +407,10 @@ CB.game = (function () {
       spawnTimers[kind] = spawnEvery(kind);
       var n = burstSize(kind);
       for (var k = 0; k < n; k++) {
-        objects.push(CB.entities.spawn(kind, speed, { fromTop: isSurvival() }));
+        objects.push(CB.entities.spawn(kind, speed, {
+          fromTop: !isMission(),
+          spreadDeg: isRun() ? cfg.run.fallAngleSpreadDeg : cfg.survival.fallAngleSpreadDeg
+        }));
       }
       if (isSurvival() && kind === 'meteorite') {
         spawnedInWave += 1;
@@ -360,9 +424,9 @@ CB.game = (function () {
   /* A shot is instant: whatever is under the crosshair at that moment is hit
      (CB.config.shot.instantAtCrosshair, PROVISIONAL: the original made "bullets",
      open question 14). Missing does nothing. One shot hits at most one object,
-     the most recent one on top. */
+     the most recent one on top. The space run has no shooting. */
   function shoot() {
-    if (state !== 'playing') { return; }
+    if (state !== 'playing' || isRun()) { return; }
     stats.shots += 1;
     CB.audio.play('shoot');
     if (!reducedMotion.matches) { shotPulse = cfg.entities.aimLine.pulseMs / 1000; }
@@ -391,6 +455,43 @@ CB.game = (function () {
     }
   }
 
+  /* Space run: the hero follows the pointer / keys / tilt along the bottom; falling objects
+     that touch it are collected (tank, star) or hurt (meteorite). */
+  function updateRun(dt) {
+    var r = cfg.run;
+    var target = Math.max(r.heroMinX, Math.min(r.heroMaxX, CB.input.aim.x));
+    heroX += (target - heroX) * Math.min(1, r.heroFollow * dt);
+    if (invulnerable > 0) { invulnerable -= dt; }
+    pointsCarry += r.pointsPerSecond * dt;
+    if (pointsCarry >= 1) {
+      var whole = Math.floor(pointsCarry);
+      pointsCarry -= whole;
+      addPoints(whole, 0, 0, true);
+    }
+    for (var i = objects.length - 1; i >= 0; i--) {
+      var o = objects[i];
+      if (!CB.entities.touchesHero(o, heroX)) { continue; }
+      if (o.kind === 'meteorite') {
+        if (invulnerable > 0) { continue; }
+        objects.splice(i, 1);
+        invulnerable = r.invulnerableMs / 1000;
+        loseLife(o.x, o.y, 'hud.hit');
+        if (state !== 'playing') { return; }
+      } else if (o.kind === 'trap') {
+        objects.splice(i, 1);
+        tanks += 1;
+        CB.audio.play('star');
+        addPoints(r.tankPoints, o.x, o.y, true);
+        CB.hud.popup(o.x, o.y, '+' + r.tankPoints, 'good');
+        CB.screens.announce(CB.t('hud.tankGot').replace('{n}', tanks));
+      } else if (o.kind === 'star') {
+        objects.splice(i, 1);
+        CB.audio.play('levelUp');
+        addLife(o.x, o.y);
+      }
+    }
+  }
+
   function updateEffects(dt) {
     for (var i = explosions.length - 1; i >= 0; i--) {
       if (!CB.entities.updateExplosion(explosions[i], dt)) { explosions.splice(i, 1); }
@@ -400,12 +501,17 @@ CB.game = (function () {
 
   function update(dt) {
     CB.input.update(dt);
+    if (!isMission()) { elapsed += dt; }
     spawnAll(dt);
+    if (isRun()) {
+      updateRun(dt);
+      if (state !== 'playing') { return; }
+    }
     for (var i = objects.length - 1; i >= 0; i--) {
       var o = objects[i];
       if (isSurvival() && o.kind === 'meteorite' && o.y >= cfg.survival.groundY) {
         objects.splice(i, 1);
-        loseLife(o);
+        loseLife(o.x, cfg.survival.groundY, 'hud.lifeLost');
         if (state !== 'playing') { return; }    // the last life ended the game
         continue;
       }
@@ -418,7 +524,7 @@ CB.game = (function () {
         bannerLeft -= dt;
         if (bannerLeft <= 0) { CB.hud.hideBanner(); }
       }
-    } else if (!isBossLevel() || cfg.boss.timed) {
+    } else if (isMission() && (!isBossLevel() || cfg.boss.timed)) {
       tickTimer(dt);
     }
   }
@@ -428,6 +534,13 @@ CB.game = (function () {
     for (i = 0; i < objects.length; i++) { CB.entities.draw(ctx, objects[i]); }
     if (boss) { CB.entities.draw(ctx, boss); }
     for (i = 0; i < explosions.length; i++) { CB.entities.drawExplosion(ctx, explosions[i]); }
+    if (isRun()) {
+      /* Blink while invulnerable (steady half-faded under reduced motion). */
+      var alpha = 1;
+      if (invulnerable > 0) { alpha = reducedMotion.matches ? 0.5 : (Math.floor(invulnerable * 10) % 2 ? 0.35 : 1); }
+      CB.entities.drawHero(ctx, heroX, alpha);
+      return;
+    }
     CB.entities.drawHero(ctx);
     CB.entities.drawAimLine(ctx, aimOrigin(), CB.input.aim, shotPulse > 0);
     CB.entities.drawCrosshair(ctx, CB.input.aim);
@@ -458,12 +571,15 @@ CB.game = (function () {
     if (endTimer) { window.clearTimeout(endTimer); endTimer = null; }
   }
 
-  /* 'mission' or 'survival'. Also flips the mode-specific texts (#stage.mode-survival, css). */
+  /* 'mission', 'survival' or 'run'. Also flips the mode-specific texts (#stage.mode-*, css). */
   function setMode(next) {
-    mode = next === 'survival' ? 'survival' : 'mission';
+    mode = (next === 'survival' || next === 'run') ? next : 'mission';
     CB.state.mode = mode;
     var stage = document.getElementById('stage');
-    if (stage) { stage.classList.toggle('mode-survival', mode === 'survival'); }
+    if (stage) {
+      stage.classList.toggle('mode-survival', mode === 'survival');
+      stage.classList.toggle('mode-run', mode === 'run');
+    }
   }
 
   /* New game in the current mode. Also what "restart" does from Game Over. */
@@ -476,14 +592,21 @@ CB.game = (function () {
     CB.input.resetAim();
     CB.hud.hidePause();
     CB.audio.warm();                 // start fetching the boss, win and Game Over music now
-    if (isSurvival()) { beginSurvival(); } else { beginLevel(false); }
+    if (isSurvival()) { beginSurvival(); }
+    else if (isRun()) { beginRun(); }
+    else { beginLevel(false); }
     CB.screens.show('game');
     CB.input.enable();
-    CB.screens.announce(CB.t(isSurvival() ? 'game.startedSurvival' : 'game.started'));
+    CB.screens.announce(CB.t(isRun() ? 'game.startedRun' : (isSurvival() ? 'game.startedSurvival' : 'game.started')));
   }
 
   function startSurvival() {
     setMode('survival');
+    start();
+  }
+
+  function startRun() {
+    setMode('run');
     start();
   }
 
@@ -494,7 +617,7 @@ CB.game = (function () {
   }
 
   /* Debug only (index.html?debug=1, key CB.config.debug.skipLevelKey). In the boss level it wins;
-     in survival it skips to the next wave. */
+     in survival it skips to the next wave; in the run it fast-forwards a minute. */
   function debugSkipLevel() {
     if (state === 'transition') {           // cut the banner short so repeated presses chain
       state = 'playing';
@@ -502,16 +625,23 @@ CB.game = (function () {
     }
     if (state !== 'playing') { return; }
     if (isSurvival()) { nextWave(); }
+    else if (isRun()) { elapsed += 60; }
     else if (isBossLevel()) { win(); }
     else { levelCleared(); }
   }
 
-  /* While paused, Tab stays on the pause dialog (its only control is the resume button). */
+  /* While paused, Tab cycles through the dialog's buttons only. */
   function trapFocusWhilePaused(event) {
     if (state !== 'paused' || event.code !== 'Tab') { return; }
     event.preventDefault();
-    var btn = document.getElementById('btn-resume');
-    if (btn) { btn.focus(); }
+    var box = document.getElementById('pause-overlay');
+    var buttons = box ? box.querySelectorAll('button') : [];
+    if (!buttons.length) { return; }
+    var at = -1;
+    for (var i = 0; i < buttons.length; i++) { if (buttons[i] === document.activeElement) { at = i; } }
+    var step = event.shiftKey ? -1 : 1;
+    var next = (at + step + buttons.length) % buttons.length;
+    buttons[next].focus();
   }
 
   function init() {
@@ -528,8 +658,10 @@ CB.game = (function () {
     init: init,
     start: start,
     startSurvival: startSurvival,
+    startRun: startRun,
     setMode: setMode,
     stop: stop,
+    exit: exit,
     pause: pause,
     resume: resume,
     togglePause: togglePause,
@@ -542,6 +674,8 @@ CB.game = (function () {
     getLevel: function () { return level; },
     getWave: function () { return wave; },
     getLives: function () { return lives; },
+    getTanks: function () { return tanks; },
+    getHeroX: function () { return heroX; },
     getTimeLeft: function () { return timeLeft; },
     count: function () { return objects.length; },
     list: function () { return objects; },    // read-only view for the debug overlay and tests
