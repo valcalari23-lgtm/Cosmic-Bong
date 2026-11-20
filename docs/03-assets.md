@@ -34,6 +34,8 @@ Cinco de estos sprites existen también como SVG, exportados por Valeria el 18 d
 | `panel.png` | 1712 × 982 | 38:2344 | Panel morado con marco metálico (instrucciones y controles). En las pantallas originales el panel se ve translúcido sobre el fondo espacial. |
 | `icon-tap.png` | 114 × 114 | 38:2246 | Icono blanco de mano tocando una pantalla, va entre "Presiona" y "para iniciar" |
 | `icon-time.png` | 87 × 87 | 38:2425 | Reloj verde, recompensa de la estrella |
+| `controls-aim.png` | 584 × 421 | (nuevo, fuera de Figma) | Ilustración de "apuntar": dos manos inclinan el celular con la mira en pantalla. Entregada por Valeria el 20 de noviembre de 2026. Se muestra en la pantalla de Controles también en computadora. |
+| `controls-shoot.png` | 546 × 328 | (nuevo, fuera de Figma) | Ilustración de "disparar": una mano toca la pantalla. Misma entrega. |
 
 ### `assets/backgrounds/`
 
@@ -42,6 +44,20 @@ Cinco de estos sprites existen también como SVG, exportados por Valeria el 18 d
 | `home.png` | 2166 × 1218 | 38:2660 | Paisaje de Victoria 2, sin texto ni personaje |
 | `game-over-glass-overlay.png` | 2166 × 1218 | 38:2623 | Vidrio roto de Game Over. Es una capa en escala de grises que en Figma va mezclada sobre el fondo dorado `#CBA004`. Hay que probar el modo de mezcla en CSS (`mix-blend-mode`) hasta que se parezca a `docs/reference/04-game-over.png`. |
 | `space.webp` | 2000 × 1125 | (fuera de Figma) | Fondo espacial que Valeria entregó el 18 de noviembre de 2026. Se dibuja al tamaño del escenario. Si copia el original como `space.png`, el juego lo usa en lugar del `.webp`. |
+
+### `assets/audio/`
+
+Vacía a propósito: el juego no trae archivos de sonido. La música y los efectos se generan en el navegador con Web Audio (`src/audio.js`), ver `docs/05-notas-para-portafolio.md`. Si Valeria quiere sus propias pistas, basta con guardarlas con estos nombres y el juego las usa en lugar de las generadas:
+
+| Archivo | Cuándo suena |
+|---|---|
+| `music-title.mp3` | Inicio, Instrucciones y Controles (en bucle) |
+| `music-play.mp3` | Niveles 1 a 3 (en bucle) |
+| `music-boss.mp3` | Nivel 4, el jefe (en bucle) |
+| `music-win.mp3` | Pantallas de victoria (una vez) |
+| `music-over.mp3` | Game Over (una vez) |
+
+Solo audio propio o con licencia que permita publicarlo.
 
 ### `assets/fonts/`
 
@@ -74,9 +90,9 @@ Lo que falta y quién lo resuelve.
 | Medidor vacío de Game Over | 4 | 38:2593 (Group 47) | Hecho con CSS en la etapa 4 (`.meter`). Si Valeria prefiere el dibujo original, exportarlo como `assets/ui/meter-empty.png`. |
 | Barras verticales de Game Over | 4 | 38:2614 a 38:2620 | Hechas con CSS en la etapa 4 (`.side-bar`). |
 | Tanque decorativo girado | 0, opcional | 38:2188 | Decoración de la pantalla de inicio |
-| Ilustraciones de controles para mouse y teclado | 6 | No existen | Diseño nuevo de Valeria. Las originales (celular) son 38:2536 y 38:2574. Guardar como `assets/ui/controls-aim.png` y `assets/ui/controls-shoot.png`: la pantalla las muestra en cuanto existan; mientras tanto hay texto y teclas. |
+| Ilustraciones de controles | 6 | 38:2536 y 38:2574 | Resuelto el 20 de noviembre de 2026: Valeria entregó `controls-aim.png` y `controls-shoot.png` (ver `assets/ui/`). Muestran el celular, también en computadora, por decisión suya; el texto y las teclas dibujadas siguen explicando el mouse y el teclado. |
 | Viñetas del storyboard | 8, opcional | 38:1666, 38:1690, 38:1801, 38:1831, 38:1855, 38:1731 | Solo si la historia va dentro del juego |
-| Sonidos y música | 7, opcional | No existen | Solo si Valeria los quiere |
+| Sonidos y música | 9 | No existen | Resuelto el 20 de noviembre de 2026 con música y efectos generados por código (`src/audio.js`). Si Valeria prefiere pistas propias, ver `assets/audio/`. |
 
 Las flechas blancas de Instrucciones y los textos "+50" y "−50" no necesitan imagen: se hacen con texto real.
 

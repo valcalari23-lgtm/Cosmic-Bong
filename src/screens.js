@@ -39,6 +39,7 @@ CB.screens = (function () {
     var label = document.getElementById('lang-label');
     label.textContent = LANG_NAMES[other];
     label.setAttribute('lang', other);
+    if (CB.audio) { CB.audio.refreshLabel(); }     // its label depends on the mute state
   }
 
   function setLang(lang) {
@@ -64,6 +65,7 @@ CB.screens = (function () {
       if (match) { target = all[i]; }
     }
     CB.state.screen = name;
+    if (CB.audio) { CB.audio.onScreen(name); }     // menu screens share the title music
     if (target) {
       /* A screen with its own tabindex (the game area) takes focus itself: its buttons
          live in overlays that are hidden at this point. */

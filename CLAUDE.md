@@ -71,10 +71,16 @@ src/strings.js        textos ES/EN con su origen
 src/assets.js         lista de imágenes y precarga
 src/stage.js          escalado 16:9, fondo espacial, bucle de animación
 src/screens.js        cambio de pantalla, idioma, anuncios
+src/audio.js          música y efectos con Web Audio (sin archivos); pistas propias opcionales
+src/input.js          mouse, teclado, inclinación del celular
+src/entities.js       objetos, jefe, explosiones, héroe, mira
+src/hud.js            barra, puntos, reloj, letreros, pausa
+src/levels.js         meta y velocidad por nivel
+src/game.js           máquina de estados y reglas
 src/main.js           arranque
 ```
 
-Lo que falta crear en las siguientes etapas (nombres sugeridos): `src/input.js`, `src/game.js`, `src/entities.js`, `src/hud.js`, `src/levels.js`, `src/audio.js`.
+Todas las etapas del plan están construidas (0 a 9). El orden de carga de los scripts está en `index.html`; `audio.js` va después de `screens.js` y antes de `game.js`.
 
 ## Datos para el portafolio
 

@@ -72,7 +72,7 @@ No programes estas respuestas como definitivas. Usa los valores `PROVISIONAL` de
 9. **Comportamiento del jefe:** si se mueve, si siguen saliendo meteoritos y tanques, si hay tiempo límite.
 10. **Tanques de oxígeno.** El storyboard muestra tanques con medidor azul que hay que recuperar; la trampa es un tanque con medidor rojo. No está claro si en el juego se recogen tanques o si solo es la historia.
 11. **Pantallas de Controles y segunda de victoria.** El código original tiene cinco pantallas: Portada, Instrucciones, Fondo (juego), Game Over y Win. En Figma hay además una de Controles y dos de victoria. Falta decidir si esta versión usa las del diseño (lo asumido) o solo las cinco del código.
-12. **Sonido y música.** El original importaba la librería de sonido y tenía una música de introducción prevista, pero estaba desactivada. No hay archivos de audio.
+12. **Sonido y música.** El original importaba la librería de sonido y tenía una música de introducción prevista, pero estaba desactivada. No hay archivos de audio. *Resuelto el 20 de noviembre de 2026 a pedido de Valeria: música y efectos generados por código en `src/audio.js`, con botón de silencio y tecla M. Ver `docs/05-notas-para-portafolio.md`.*
 13. **Si existe pantalla de transición entre niveles.**
 14. **Si el disparo viaja o es instantáneo.** El original crea "balas"; no se ve si salen del héroe y viajan o si aparecen donde está la mira. La maqueta muestra una línea punteada del héroe a la mira y la explosión en la mira.
 
@@ -100,11 +100,12 @@ Todo esto es **[Adaptación]**: decisiones nuevas, propuestas para que Valeria l
 | Disparar | Clic izquierdo | Espacio o Enter |
 | Pausa | | P o Esc |
 | Idioma | Botón ES/EN | L |
+| Sonido | Botón del altavoz | M |
 | Avanzar en pantallas | Clic en el botón | Enter o Espacio con el botón enfocado |
 | En el celular (etapa 8) | Inclinar el celular para apuntar, como en el original; tocar la pantalla para disparar | |
 
 - El cursor del sistema se oculta sobre el área de juego y se reemplaza por la mira (`ui/crosshair.png`).
-- La pantalla de Controles necesita ilustraciones nuevas (mouse y teclas) en el estilo de línea blanca del original. Mientras Valeria las diseña, se muestran con texto.
+- La pantalla de Controles usa las ilustraciones de Valeria (20 de noviembre de 2026): el celular inclinado para "apuntar" y una mano tocando la pantalla para "disparar", junto al texto y las teclas dibujadas para mouse y teclado.
 - El icono de "Presiona" es una mano tocando una pantalla. Se mantiene por ahora; Valeria decide si lo cambia por un icono de clic.
 - La maqueta original no tiene pausa. Se agrega por accesibilidad.
 - Las medidas en pixeles que vienen del código (1280 × 720) se multiplican por 1.5 para el escenario de 1920 × 1080.

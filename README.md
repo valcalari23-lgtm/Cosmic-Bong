@@ -12,7 +12,7 @@ Código: https://github.com/valcalari23-lgtm/Cosmic-Bong
 
 Doble clic en `index.html`. Se abre en tu navegador. No hay que instalar nada.
 
-El juego completo está construido (etapas 0 a 7 de `docs/02-plan-por-etapas.md`): cuatro niveles, jefe, Game Over, victoria, instrucciones y controles, en español e inglés y jugable con mouse o solo teclado.
+El juego completo está construido (etapas 0 a 9 de `docs/02-plan-por-etapas.md`): cuatro niveles, jefe, Game Over, victoria, instrucciones y controles, música y efectos, en español e inglés y jugable con mouse, solo teclado o inclinando el celular. La tecla M o el botón del altavoz silencian el sonido.
 
 ## Empezar con Claude Code
 
@@ -42,13 +42,19 @@ cosmic-boing/
 │   ├── assets.js           lista y carga de imágenes
 │   ├── stage.js            tamaño de pantalla, fondo espacial, animación
 │   ├── screens.js          cambio de pantalla e idioma
+│   ├── audio.js            música y efectos generados con Web Audio
+│   ├── input.js            mouse, teclado e inclinación del celular
+│   ├── entities.js         meteoritos, tanques, estrellas, jefe, explosiones
+│   ├── hud.js              barra cósmica, puntos, reloj, pausa
+│   ├── levels.js           metas y velocidad por nivel
+│   ├── game.js             estados y reglas del juego
 │   └── main.js             arranque
 ├── assets/
 │   ├── sprites/            héroe, meteorito, tanque, estrella, jefe, explosión
 │   ├── ui/                 logo, mira, panel, iconos
 │   ├── backgrounds/        paisaje final y vidrio roto de Game Over
 │   ├── fonts/              Poppins
-│   └── audio/              vacía
+│   └── audio/              vacía: el sonido se genera por código (ver docs/03-assets.md)
 ├── docs/
 │   ├── 01-diseno-del-juego.md     reglas con su origen y preguntas abiertas
 │   ├── 02-plan-por-etapas.md      qué se construye en cada etapa y cómo probarla

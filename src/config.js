@@ -129,7 +129,26 @@ CB.config = {
       right: ['ArrowRight', 'KeyD'],
       shoot: ['Space', 'Enter'],
       pause: ['KeyP', 'Escape'],
-      language: ['KeyL']
+      language: ['KeyL'],
+      sound: ['KeyM']
+    }
+  },
+
+  /* ADAPTATION: sound. The original game had none (docs/03-assets.md). Music and effects are
+     synthesized in src/audio.js, so the game ships no audio files. If Valeria adds her own tracks
+     with the names in "files", those play instead. Sound starts after the first click or key
+     (browser autoplay rules) and the choice to mute is remembered in localStorage. */
+  audio: {
+    musicVolume: 0.35,         // 0..1
+    sfxVolume: 0.6,            // 0..1
+    duckWhilePaused: 0.3,      // music level while paused, relative to musicVolume
+    storageKey: 'cosmic-boing-sound',
+    files: {
+      title: 'assets/audio/music-title.mp3',
+      play: 'assets/audio/music-play.mp3',
+      boss: 'assets/audio/music-boss.mp3',
+      win: 'assets/audio/music-win.mp3',
+      over: 'assets/audio/music-over.mp3'
     }
   },
 

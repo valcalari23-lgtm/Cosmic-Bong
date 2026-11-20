@@ -5,7 +5,9 @@
    Stage 5: level 4 is the boss (10 lives); the tenth hit wins the game.
 
    States: 'idle' (not playing), 'playing', 'transition' (level banner),
-   'paused', 'over' (Game Over screen showing), 'won' (win screens showing). */
+   'paused', 'over' (Game Over screen showing), 'won' (win screens showing).
+
+   Sound (src/audio.js) is told what happens from here: music per level, one effect per event. */
 
 window.CB = window.CB || {};
 
@@ -78,6 +80,7 @@ CB.game = (function () {
       win();
       return;
     }
+    CB.audio.play('bossHit');
     CB.screens.announce(CB.t('boss.lives').replace('{n}', left));
   }
 
@@ -93,6 +96,7 @@ CB.game = (function () {
     timeLeft -= dt;
     if (timeLeft <= cfg.hud.warnAtMs / 1000 && !warned && timeLeft > 0) {
       warned = true;
+      CB.audio.play('warning');
       CB.screens.announce(CB.t('hud.timeWarning').replace('{s}', Math.ceil(timeLeft)));
     }
     if (timeLeft <= 0) {
@@ -134,6 +138,7 @@ CB.game = (function () {
       CB.hud.setBossLives(null);
     }
     CB.hud.updateTime(timeLeft);
+    CB.audio.music(isBossLevel() ? 'boss' : 'play');   // levels 1-3 share one loop; the boss has its own
     if (withBanner) {
       state = 'transition';
       transitionLeft = cfg.levelFlow.bannerMs / 1000;
@@ -150,6 +155,7 @@ CB.game = (function () {
     var text = CB.t('levels.cleared').replace('{n}', level) + ' ';
     text += (next === cfg.boss.level) ? CB.t('boss.arrives') : (CB.t('hud.level') + ' ' + next + '.');
     CB.screens.announce(text);
+    CB.audio.play(next === cfg.boss.level ? 'bossArrives' : 'levelUp');
     level = next;
     beginLevel(true);
   }
@@ -162,6 +168,7 @@ CB.game = (function () {
     stopPlay();
     state = 'won';
     CB.screens.show('win1');
+    CB.audio.music('win');
     CB.screens.announce(CB.t('win.headingLine1') + ' ' + CB.t('win.headingLine2'));
     endTimer = window.setTimeout(function () {
       endTimer = null;
@@ -174,6 +181,7 @@ CB.game = (function () {
     stopPlay();
     state = 'over';
     CB.screens.show('gameover');
+    CB.audio.music('over');
     CB.screens.announce(CB.t('gameOver.title'));
   }
 
@@ -181,6 +189,8 @@ CB.game = (function () {
     if (state !== 'playing') { return; }
     state = 'paused';
     CB.input.disable();                       // shows the cursor, releases held keys
+    CB.audio.duck(true);
+    CB.audio.play('pause');
     CB.hud.showPause();
     CB.screens.announce(CB.t('pause.title'));
   }
@@ -189,6 +199,8 @@ CB.game = (function () {
     if (state !== 'paused') { return; }
     state = 'playing';
     CB.hud.hidePause();
+    CB.audio.duck(false);
+    CB.audio.play('resume');
     CB.input.enable();
     CB.screens.focusGame();
   }
@@ -219,6 +231,7 @@ CB.game = (function () {
   function shoot() {
     if (state !== 'playing') { return; }
     stats.shots += 1;
+    CB.audio.play('shoot');
     if (!reducedMotion.matches) { shotPulse = cfg.entities.aimLine.pulseMs / 1000; }
 
     var aim = CB.input.aim;
@@ -235,9 +248,9 @@ CB.game = (function () {
       objects.splice(i, 1);
       explosions.push(CB.entities.spawnExplosion(o.x, o.y));
       stats.hits += 1;
-      if (o.kind === 'meteorite') { addPoints(cfg.points.meteorite, o.x, o.y); }
-      else if (o.kind === 'trap') { addPoints(cfg.points.trap, o.x, o.y); }
-      else if (o.kind === 'star') { addTime(cfg.powerup.extraMs, o.x, o.y); }
+      if (o.kind === 'meteorite') { CB.audio.play('hitMeteorite'); addPoints(cfg.points.meteorite, o.x, o.y); }
+      else if (o.kind === 'trap') { CB.audio.play('hitTrap'); addPoints(cfg.points.trap, o.x, o.y); }
+      else if (o.kind === 'star') { CB.audio.play('star'); addTime(cfg.powerup.extraMs, o.x, o.y); }
       return;
     }
   }

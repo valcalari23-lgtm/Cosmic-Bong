@@ -79,10 +79,19 @@ Las reglas y los datos por confirmar están en `01-diseno-del-juego.md`.
 - `prefers-reduced-motion`.
 - Anuncios en `#live` para lector de pantalla.
 - Comparación final de cada pantalla contra `docs/reference/`.
-- Sonido, solo si Valeria lo quiere y entrega los archivos.
+- Sonido, solo si Valeria lo quiere y entrega los archivos. *(Hecho en la etapa 9: lo pidió el 20 de noviembre de 2026; sin archivos, generado por código.)*
 
 ## Etapa 8 (opcional): publicar
 
 - Storyboard como introducción, si Valeria confirma que era parte del juego.
 - Subir a GitHub Pages o similar para enlazarlo desde el portafolio.
 - Control por giroscopio en celular como modo extra, fiel al original.
+
+## Etapa 9: sonido e ilustraciones de controles (20 de noviembre de 2026)
+
+- `src/audio.js`: música por estado (menús, niveles 1 a 3, jefe, victoria, Game Over) y un efecto por evento, todo generado con Web Audio. Sin archivos.
+- Botón de sonido abajo a la izquierda, tecla M, estado recordado en el navegador. La música baja de volumen en pausa.
+- Las ilustraciones `controls-aim.png` y `controls-shoot.png` de Valeria ocupan los recuadros de la pantalla de Controles.
+- Si Valeria entrega pistas propias con los nombres de `docs/03-assets.md`, el juego las usa en lugar de las generadas.
+
+**Probar:** abrir el juego y pulsar "Presiona para iniciar": empieza la música de menú. En Controles se ven las dos ilustraciones. Al jugar cambia la música; cada disparo, acierto, tanque y estrella suena distinto; a los 10 segundos finales hay un doble pitido; el jefe trae otra música; ganar y perder tienen su propia melodía corta. M o el botón del altavoz silencian todo y el estado se mantiene al recargar.

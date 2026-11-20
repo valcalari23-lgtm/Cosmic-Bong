@@ -7,6 +7,20 @@ window.CB = window.CB || {};
   function isLanguageKey(event) {
     return CB.config.input.keys.language.indexOf(event.code) !== -1;
   }
+  function isSoundKey(event) {
+    return CB.config.input.keys.sound.indexOf(event.code) !== -1;
+  }
+
+  /* Dashed slots show a file name until their image loads; then the frame disappears. */
+  function watchAssetSlots() {
+    var imgs = document.querySelectorAll('.asset-slot img');
+    for (var i = 0; i < imgs.length; i++) {
+      (function (img) {
+        function mark() { img.parentNode.classList.add('has-image'); }
+        if (img.complete && img.naturalWidth) { mark(); } else { img.addEventListener('load', mark); }
+      })(imgs[i]);
+    }
+  }
 
   function startDebugOverlay() {
     var box = document.getElementById('debug');
@@ -21,6 +35,7 @@ window.CB = window.CB || {};
         'shots  ' + CB.game.stats.shots + '  hits ' + CB.game.stats.hits + '\n' +
         'score  ' + CB.game.getScore() + '  level ' + CB.game.getLevel() + '  time ' + CB.game.getTimeLeft().toFixed(1) + '\n' +
         'missing assets ' + CB.assets.missing.length + '\n' +
+        'music  ' + (CB.audio.current() || '-') + (CB.audio.isMuted() ? '  (muted)' : '') + '\n' +
         (CB.game.getBoss() ? 'boss   ' + CB.game.getBoss().lives + ' lives\n' : '') +
         'N: skip level';
     });
@@ -32,11 +47,15 @@ window.CB = window.CB || {};
   function init() {
     CB.stage.init();
     CB.game.init();
+    CB.audio.init();
     CB.screens.setLang(CB.config.defaultLang);
+    watchAssetSlots();
 
     document.getElementById('btn-lang').addEventListener('click', CB.screens.toggleLang);
     document.addEventListener('keydown', function (event) {
-      if (isLanguageKey(event) && !event.repeat) { CB.screens.toggleLang(); }
+      if (event.repeat) { return; }
+      if (isLanguageKey(event)) { CB.screens.toggleLang(); }
+      if (isSoundKey(event)) { CB.audio.toggle(); }
     });
 
     /* Flow: title -> instructions -> controls -> game (question 11: screens as in Figma). */

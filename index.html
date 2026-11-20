@@ -77,8 +77,8 @@
       </section>
 
       <!-- Controls. New for the desktop version (the original explained the phone, see
-           docs/reference/03-controls-mobile-original.png). The mouse and keyboard
-           illustrations are not drawn yet: dashed slots show the expected file names. -->
+           docs/reference/03-controls-mobile-original.png). The illustrations are Valeria's
+           (2026-11-20); the dashed slot only shows if an image is missing. -->
       <section id="screen-controls" class="screen" data-screen="controls" aria-labelledby="controls-heading" hidden>
         <img class="deco deco-panel-meteorite-right" src="assets/sprites/meteorite.svg" alt="">
         <div class="panel panel-controls">
@@ -106,7 +106,7 @@
               </p>
             </section>
           </div>
-          <p class="control-extra"><span data-i18n="controls.pauseHow"></span> &middot; <span data-i18n="controls.langHow"></span></p>
+          <p class="control-extra"><span data-i18n="controls.pauseHow"></span> &middot; <span data-i18n="controls.langHow"></span> &middot; <span data-i18n="controls.soundHow"></span></p>
           <!-- Shown only on touch devices (html.is-touch, set by src/main.js). -->
           <p class="control-extra phone-only" data-i18n="controls.phoneHint"></p>
           <button id="btn-controls-start" class="press press-small" type="button">
@@ -206,8 +206,16 @@
         <img class="win2-hero" src="assets/sprites/hero-home.png" alt="">
       </section>
 
-      <!-- Language switch. Not in the original design: added for the desktop version. -->
-      <button id="btn-lang" class="lang" type="button" aria-describedby="lang-hint">
+      <!-- Sound switch (src/audio.js sets its label) and language switch.
+           Neither is in the original design: added for the desktop version. -->
+      <button id="btn-sound" class="corner-btn sound" type="button">
+        <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" focusable="false">
+          <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/>
+          <path class="wave" d="M16 8.5a5 5 0 0 1 0 7M18.6 6a9 9 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path class="cross" d="M16 9l5 6M21 9l-5 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button id="btn-lang" class="corner-btn lang" type="button" aria-describedby="lang-hint">
         <span id="lang-label"></span>
       </button>
       <span id="lang-hint" class="sr-only" data-i18n="common.langHint"></span>
@@ -227,6 +235,7 @@
   <script src="src/assets.js"></script>
   <script src="src/stage.js"></script>
   <script src="src/screens.js"></script>
+  <script src="src/audio.js"></script>
   <script src="src/input.js"></script>
   <script src="src/entities.js"></script>
   <script src="src/hud.js"></script>

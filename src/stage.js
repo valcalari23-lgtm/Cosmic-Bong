@@ -97,6 +97,9 @@ CB.stage = (function () {
   }
 
   function fit() {
+    /* A hidden window reports 0 x 0 (background tab in some browsers, embedded previews):
+       keep the last good scale instead of collapsing the stage. */
+    if (!window.innerWidth || !window.innerHeight) { return; }
     scale = Math.min(window.innerWidth / W, window.innerHeight / H);
     var left = (window.innerWidth - W * scale) / 2;
     var top = (window.innerHeight - H * scale) / 2;

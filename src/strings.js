@@ -14,7 +14,11 @@ CB.strings = {
   es: {
     common: {
       press: 'Presiona',                               // [F]
-      langHint: 'Cambiar idioma. Atajo: tecla L.'      // [NEW]
+      langHint: 'Cambiar idioma. Atajo: tecla L.',     // [NEW]
+      soundMute: 'Silenciar el sonido. Atajo: tecla M.',   // [NEW] sound button label while sound is on
+      soundUnmute: 'Activar el sonido. Atajo: tecla M.',   // [NEW] sound button label while muted
+      soundOn: 'Sonido activado',                      // [NEW] live-region text
+      soundOff: 'Sonido silenciado'                    // [NEW] live-region text
     },
     title: {
       toStart: 'para iniciar'                          // [F]
@@ -39,6 +43,7 @@ CB.strings = {
       keysShoot: 'o la barra espaciadora, o Enter',                   // [NEW] screen-reader text
       pauseHow: 'P o Esc para pausar',                 // [NEW] desktop controls
       langHow: 'L cambia el idioma',                   // [NEW]
+      soundHow: 'M silencia el sonido',                // [NEW]
       phoneHint: 'En el celular: inclínalo para apuntar y toca la pantalla para disparar.'   // [NEW] like the original
     },
     hud: {
@@ -89,7 +94,11 @@ CB.strings = {
   en: {
     common: {
       press: 'Press',                                  // [FL]
-      langHint: 'Change language. Shortcut: L key.'    // [NEW]
+      langHint: 'Change language. Shortcut: L key.',   // [NEW]
+      soundMute: 'Mute the sound. Shortcut: M key.',   // [NEW] sound button label while sound is on
+      soundUnmute: 'Turn the sound on. Shortcut: M key.',  // [NEW] sound button label while muted
+      soundOn: 'Sound on',                             // [NEW] live-region text
+      soundOff: 'Sound off'                            // [NEW] live-region text
     },
     title: {
       toStart: 'to start'                              // [FL]
@@ -114,6 +123,7 @@ CB.strings = {
       keysShoot: 'or the space bar, or Enter',                        // [NEW] screen-reader text
       pauseHow: 'P or Esc to pause',                   // [NEW] desktop controls
       langHow: 'L changes the language',               // [NEW]
+      soundHow: 'M mutes the sound',                   // [NEW]
       phoneHint: 'On a phone: tilt it to aim and tap the screen to shoot.'                   // [NEW] like the original
     },
     hud: {
